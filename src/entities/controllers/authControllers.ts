@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 import UsuarioModel from "../usuarios/UsuariosModel";
 
-export const registrar = async (req: Request, res: Response) => {
+const registrar = async (req: Request, res: Response) => {
     try {
         const nombre = req.body.nombre;
         const email = req.body.email;
@@ -17,7 +18,7 @@ export const registrar = async (req: Request, res: Response) => {
 
         // VALIDACIÓN DE PASSWORD
         const validPwd = /^(?=.*\d)(?=.*[!\"#\$%&'()*+,-./:;<=>?@[\\\]^_])(?=.*[A-Z])(?=.*[a-z])\S{8,}$/
-        if(!validPwd.test(password)){
+        if (!validPwd.test(password)) {
             return res.status(404).json({
                 success: false,
                 message: "La clave de tener pelo menos 1 número, caracter especial, letra mayuscula, y minuscula "
@@ -59,4 +60,56 @@ export const registrar = async (req: Request, res: Response) => {
         })
 
     }
+}
+
+const loguear = async (req: Request, res: Response) => {
+    try {
+        const email = req.body.email;
+        const password = req.body.password;
+
+        const usuario = await UsuarioModel.findOne({ email: email });
+        if (!usuario) {
+            return res.status(404).json({
+                success: false,
+                message: "Dato incorrecto"
+            })
+        }
+        /////////   VALIDAR PASSWORD   //////////
+        const validarpw = bcrypt.compareSync(password, usuario!.password);
+        if (!validarpw) {
+            return res.status(404).json({
+                success: false,
+                message: "Dato incorrecto"
+            })
+        }
+
+        ///////////////   CREACIÓN DEL TOKEN   ////////////////////
+        const token = jwt.sign(
+            {
+                nombre: usuario.nombre,
+                email: email.email,
+                usuarioId: usuario._id,
+                usuarioRole: usuario.role
+            },
+            process.env.JWT_SECRET as string,
+            {
+                expiresIn: "5h"
+            }
+        )
+
+        res.status(200).json({
+            success: true,
+            message: "Logueado con suceso",
+            token: token
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "Error al loguearse"
+        })
+    }
+}
+
+export{
+    registrar, loguear
 }
