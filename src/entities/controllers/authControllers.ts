@@ -5,7 +5,7 @@ import UsuarioModel from "../usuarios/UsuariosModel";
 
 const registrar = async (req: Request, res: Response) => {
     try {
-        const nombre = req.body.nombre;
+        const name = req.body.name;
         const email = req.body.email;
         const password = req.body.password;
 
@@ -40,7 +40,7 @@ const registrar = async (req: Request, res: Response) => {
         const pwdEncryptado = bcrypt.hashSync(password, 8);
         const crearNuevoUser = await UsuarioModel.create(
             {
-                nombre: nombre,
+                name: name,
                 email: email,
                 password: pwdEncryptado
             }
@@ -71,7 +71,7 @@ const loguear = async (req: Request, res: Response) => {
         if (!usuario) {
             return res.status(404).json({
                 success: false,
-                message: "Dato incorrecto"
+                message: "Dato incorrecto de usuario"
             })
         }
         /////////   VALIDAR PASSWORD   //////////
@@ -79,14 +79,14 @@ const loguear = async (req: Request, res: Response) => {
         if (!validarpw) {
             return res.status(404).json({
                 success: false,
-                message: "Dato incorrecto"
+                message: "Dato incorrecto password"
             })
         }
 
         ///////////////   CREACIÓN DEL TOKEN   ////////////////////
         const token = jwt.sign(
             {
-                nombre: usuario.nombre,
+                name: usuario.name,
                 email: email.email,
                 usuarioId: usuario._id,
                 usuarioRole: usuario.role

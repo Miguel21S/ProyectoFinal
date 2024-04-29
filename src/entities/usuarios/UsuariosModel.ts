@@ -1,7 +1,7 @@
 import { Document, model, Schema } from "mongoose";
 
 interface Usuario extends Document {
-    nombre: string;
+    name: string;
     email: string;
     password: string;
     role: string;
@@ -9,7 +9,7 @@ interface Usuario extends Document {
 
 const UsuarioSchema = new Schema<Usuario>(
     {
-        nombre: {
+        name: {
             type: String,
             required: false,
         },
