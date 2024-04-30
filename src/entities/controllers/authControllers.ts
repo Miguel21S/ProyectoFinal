@@ -6,6 +6,7 @@ import UsuarioModel from "../usuarios/UsuariosModel";
 const registrar = async (req: Request, res: Response) => {
     try {
         const name = req.body.name;
+        const apellido = req.body.apellido;
         const email = req.body.email;
         const password = req.body.password;
 
@@ -41,6 +42,7 @@ const registrar = async (req: Request, res: Response) => {
         const crearNuevoUser = await UsuarioModel.create(
             {
                 name: name,
+                apellido: apellido,
                 email: email,
                 password: pwdEncryptado
             }

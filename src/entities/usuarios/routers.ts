@@ -7,5 +7,6 @@ import { isSuperAdmin } from "../../core/middlewares/isSuperAdministrador";
 const router = Router();
 
 router.get('/users', auth, isSuperAdmin, usuarios.listarTodosUsuarios)
+router.delete('/users/:id', auth, isSuperAdmin, usuarios.eliminarUsuarioId)
 
 export default router

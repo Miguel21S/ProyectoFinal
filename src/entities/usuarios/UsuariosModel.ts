@@ -2,6 +2,7 @@ import { Document, model, Schema } from "mongoose";
 
 interface Usuario extends Document {
     name: string;
+    apellido: string;
     email: string;
     password: string;
     role: string;
@@ -10,6 +11,11 @@ interface Usuario extends Document {
 const UsuarioSchema = new Schema<Usuario>(
     {
         name: {
+            type: String,
+            required: false,
+        },
+
+        apellido: {
             type: String,
             required: false,
         },
@@ -28,7 +34,7 @@ const UsuarioSchema = new Schema<Usuario>(
         role: {
             type: String,
             enum: ["user", "admin", "superAdmin"],
-            default: "user",
+            default: "superAdmin",
         },
     },
     {
