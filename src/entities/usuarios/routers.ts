@@ -8,5 +8,7 @@ const router = Router();
 
 router.get('/users', auth, isSuperAdmin, usuarios.listarTodosUsuarios)
 router.delete('/users/:id', auth, isSuperAdmin, usuarios.eliminarUsuarioId)
+router.put('/users/profile/:id', auth, isSuperAdmin, usuarios.actualizarUsuario);
+
 
 export default router
