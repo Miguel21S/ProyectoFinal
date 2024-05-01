@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import UsuarioModel from "./UsuariosModel";
+
 //////////////////////   MÉTODO QUE LISTA TODOS USUARIOS   /////////////////////////
 const listarTodosUsuarios = async (req: Request, res:Response) => {
     try {
@@ -102,8 +103,8 @@ const eliminarUsuarioId = async (req: Request, res: Response)=> {
                 message: "Usuario no encontrado"
             })
         }
-        
-        if(encontrarUsuarioEliminar?._id.usuarioRole === "SuperAdmin"){
+       
+        if(encontrarUsuarioEliminar.role  === "SuperAdmin"){
             return res.status(404).json({
                 success: false,
                 messages: "No se puede eliminar este usuario"
