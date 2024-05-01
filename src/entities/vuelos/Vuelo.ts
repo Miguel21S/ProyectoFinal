@@ -43,6 +43,36 @@ const adicionarVuelo = async (req: Request, res: Response) => {
     }
 }
 
+const listarVuelos = async (req: Request, res: Response) => {
+    try {
+        const vuelos = await VueloModel.find()
+        .select("name")
+        .select("aerolinea")
+        .select("origen")
+        .select("destino")
+        .select("fechaIda")
+        .select("horaIda")
+        .select("fechaRegreso")
+        .select("horaRegreso")
+        .select("precio")
+
+        res.status(200).json(
+            {
+                success: true,
+                message: "Lista de vuelos",
+                data: vuelos
+            }
+        )
+    } catch (error) {
+        return res.status(500).json(
+            {
+                success: false,
+                message: "Error en listar vuelos"
+            }
+        )
+    }
+}
+
 export {
-    adicionarVuelo
+    adicionarVuelo, listarVuelos
 }

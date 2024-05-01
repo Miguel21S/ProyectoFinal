@@ -6,5 +6,6 @@ import * as vuelos from "./Vuelo";
 const router = Router();
 
 router.post('/auth/vuelo', auth, isSuperAdmin, vuelos.adicionarVuelo);
+router.get('/auth/vuelo', auth, isSuperAdmin, vuelos.listarVuelos);
 
 export default router;
