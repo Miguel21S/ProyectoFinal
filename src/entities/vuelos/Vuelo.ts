@@ -1,8 +1,9 @@
+
 import { Request, Response } from "express";
 import VueloModel from "./VuelosModel";
 import UsuarioModel from "../usuarios/UsuariosModel";
 
-
+//////////////////////   MÉTODO ADICIONAR VUELO   /////////////////////////
 const adicionarVuelo = async (req: Request, res: Response) => {
     try {
         const name = req.body.name;
@@ -44,6 +45,7 @@ const adicionarVuelo = async (req: Request, res: Response) => {
     }
 }
 
+//////////////////////   MÉTODO LISTAR VUELOS  /////////////////////////
 const listarVuelos = async (req: Request, res: Response) => {
     try {
         const vuelos = await VueloModel.find()
@@ -74,9 +76,10 @@ const listarVuelos = async (req: Request, res: Response) => {
     }
 }
 
+//////////////////////   MÉTODO ACTUALIZAR VUELO   /////////////////////////
 const actualizarVuelo = async (req: Request, res: Response) =>{
     try {
-        const usuarioId = req.tokenData.usuarioId;
+        const usuarioAdmin = req.tokenData.usuarioId;
         const idVuelo = req.body._id;
         const name = req.body.name;
         const aerolinea = req.body.aerolinea;
@@ -88,7 +91,7 @@ const actualizarVuelo = async (req: Request, res: Response) =>{
         const fechaRegreso = req.body.fechaRegreso;
         const horaRegreso = req.body.horaRegreso;       
 
-        const usuario = await UsuarioModel.findOne({_id: usuarioId});
+        const usuario = await UsuarioModel.findOne({_id: usuarioAdmin});
         if(!usuario){
             return res.status(404).json({
                 success: false,
@@ -147,6 +150,53 @@ const actualizarVuelo = async (req: Request, res: Response) =>{
     }
 }
 
+//////////////////////   MÉTODO ELIMINAR VUELO POR ID   /////////////////////////
+const eliminarVuelo = async (req: Request, res: Response) =>{
+    try {
+        const usuarioAdmin = req.tokenData.usuarioId;
+        const vueloId = req.params.id;
+
+        const usuario = await UsuarioModel.findOne({_id: usuarioAdmin});
+        if(!usuario){
+            return res.status(404).json({
+                success: false,
+                message: "Usuario autorizado no encontrado"
+            })
+        }
+        
+        if(usuario.role  !== "superAdmin"){
+            return res.status(404).json({
+                success: false,
+                messages: "Usuario no autorizado"
+            })
+        }
+        console.log(usuario.role)
+        console.log(vueloId)
+
+        const vuelo = await VueloModel.findById({ _id: vueloId });
+        console.log(vuelo)
+        if(!vuelo){
+            return res.status(404).json({
+                success: false,
+                message: "Vuelo no encontrado"
+            })
+        }
+        
+        await VueloModel.findByIdAndDelete( vueloId );
+
+        res.status(200).json({
+            success: true,
+            message: "Vuelo eliminado con suceso"
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "Error al eliminar vuelo"
+        })
+    }
+}
+
 export {
-    adicionarVuelo, listarVuelos, actualizarVuelo
+    adicionarVuelo, listarVuelos, actualizarVuelo,
+    eliminarVuelo
 }

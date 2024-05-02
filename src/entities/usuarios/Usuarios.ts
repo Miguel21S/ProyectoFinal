@@ -95,7 +95,6 @@ const eliminarUsuarioId = async (req: Request, res: Response)=> {
             })
         }
         
-
         const encontrarUsuarioEliminar = await UsuarioModel.findById({ _id: IdUsuario });
         if(!encontrarUsuarioEliminar){
             return res.status(404).json({
@@ -104,7 +103,7 @@ const eliminarUsuarioId = async (req: Request, res: Response)=> {
             })
         }
        
-        if(encontrarUsuarioEliminar.role  === "SuperAdmin"){
+        if(encontrarUsuarioEliminar.role  === "superAdmin"){
             return res.status(404).json({
                 success: false,
                 messages: "No se puede eliminar este usuario"

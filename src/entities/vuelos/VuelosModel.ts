@@ -1,3 +1,4 @@
+
 import { Schema, model, Document } from "mongoose";
 
 interface Vuelo extends Document {
