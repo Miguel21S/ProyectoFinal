@@ -32,7 +32,6 @@ const adicionarVuelo = async (req: Request, res: Response) => {
             {
                 success: true,
                 message: "Vuelo adicionado con suceso",
-                data: vueloAdicionado
             }
         )
     } catch (error) {
@@ -170,8 +169,6 @@ const eliminarVuelo = async (req: Request, res: Response) =>{
                 messages: "Usuario no autorizado"
             })
         }
-        console.log(usuario.role)
-        console.log(vueloId)
 
         const vuelo = await VueloModel.findById({ _id: vueloId });
         console.log(vuelo)
