@@ -7,5 +7,6 @@ const router = Router();
 
 router.post('/auth/vuelo', auth, isSuperAdmin, vuelos.adicionarVuelo);
 router.get('/auth/vuelo', auth, isSuperAdmin, vuelos.listarVuelos);
+router.put('/auth/vuelo', auth, isSuperAdmin, vuelos.actualizarVuelo);
 
 export default router;

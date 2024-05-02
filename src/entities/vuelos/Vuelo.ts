@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import VueloModel from "./VuelosModel";
+import UsuarioModel from "../usuarios/UsuariosModel";
 
 
 const adicionarVuelo = async (req: Request, res: Response) => {
@@ -73,6 +74,79 @@ const listarVuelos = async (req: Request, res: Response) => {
     }
 }
 
+const actualizarVuelo = async (req: Request, res: Response) =>{
+    try {
+        const usuarioId = req.tokenData.usuarioId;
+        const idVuelo = req.body._id;
+        const name = req.body.name;
+        const aerolinea = req.body.aerolinea;
+        const origen = req.body.origen;
+        const destino = req.body.destino;
+        const precio = req.body.precio;
+        const fechaIda = req.body.fechaIda;
+        const horaIda = req.body.horaIda;
+        const fechaRegreso = req.body.fechaRegreso;
+        const horaRegreso = req.body.horaRegreso;       
+
+        const usuario = await UsuarioModel.findOne({_id: usuarioId});
+        if(!usuario){
+            return res.status(404).json({
+                success: false,
+                message: "Usuario autorizado no encontrado"
+            })
+        }
+
+        if(usuario.role !== "superAdmin"){
+            return res.status(404).json({
+                success: false,
+                message: "Usuario autorizado no encontrado",
+            }) 
+        }
+
+        const vuelo = await VueloModel.findById({ _id: idVuelo});
+        if(!vuelo){
+            return res.status(404).json({
+                success: false,
+                message: "Vuelo no encontrado",
+            }) 
+        }
+        
+        await VueloModel.findByIdAndUpdate(
+            {
+                _id:idVuelo
+            },
+            {
+                name: name,
+                aerolinea: aerolinea,
+                origen: origen,
+                destino: destino,
+                precio: precio,
+                fechaIda: fechaIda,
+                horaIda: horaIda,
+                fechaRegreso: fechaRegreso,
+                horaRegreso: horaRegreso, 
+            },
+            {
+                new: true
+            }
+        )
+
+        res.status(200).json(
+            {
+                success: true,
+                message: "Vuelo actualizado con suceso"
+            }
+        )
+    } catch (error) {
+        return res.status(500).json(
+            {
+                success: false,
+                message: "Error en actualizar vuelos"
+            }
+        )
+    }
+}
+
 export {
-    adicionarVuelo, listarVuelos
+    adicionarVuelo, listarVuelos, actualizarVuelo
 }
