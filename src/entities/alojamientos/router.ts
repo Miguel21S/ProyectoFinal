@@ -7,5 +7,7 @@ import { isSuperAdmin } from "../../core/middlewares/isSuperAdministrador";
 const router = Router();
 
 router.post('/auth/alojamiento', auth, isSuperAdmin, alojamiento.crearAlojamiento);
+router.get('/auth/alojamiento', auth, isSuperAdmin, alojamiento.listarAlojamiento);
+router.delete('/auth/alojamiento/:id', auth, isSuperAdmin, alojamiento.eliminarAlojamiento);
 
 export default router;
