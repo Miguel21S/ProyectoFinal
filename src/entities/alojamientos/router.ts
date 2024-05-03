@@ -8,6 +8,7 @@ const router = Router();
 
 router.post('/auth/alojamiento', auth, isSuperAdmin, alojamiento.crearAlojamiento);
 router.get('/auth/alojamiento', auth, isSuperAdmin, alojamiento.listarAlojamiento);
+router.put('/auth/alojamiento/:id', auth, isSuperAdmin, alojamiento.actualizarAlojamiento);
 router.delete('/auth/alojamiento/:id', auth, isSuperAdmin, alojamiento.eliminarAlojamiento);
 
 export default router;
