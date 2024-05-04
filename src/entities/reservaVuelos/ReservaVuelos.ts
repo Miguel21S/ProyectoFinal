@@ -153,6 +153,33 @@ const actualizarReservaVuelo = async (req: Request, res: Response) => {
     }
 }
 
+//////////////////////   MÉTODO LISTAR MIS RESERVA DE VUELO   /////////////////////////
+const misReservarVuelo = async (req: Request, res: Response)=> {
+    try {
+        const usuarioId = req.tokenData.usuarioId;
+
+        const usuario = await UsuarioModel.findOne({ _id: usuarioId });
+        if (!usuario) {
+            return res.status(404).json({
+                success: false,
+                message: "Usuario no encontrado"
+            })
+        }
+
+        const rReservasVuelos = await ReservaVuelosModel.find( {idUsuario: usuarioId})
+        res.status(200).json({
+            success: true,
+            message: "Mis Reservas de Vuelos encontrado con suceso",
+            data: rReservasVuelos
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "Error en encontrar Reservas de Vuelos"
+        })
+    }
+}
+
 ///////////////////   MÉTODO ELIMINAR RESERVA DE VUELO   ////////////////////
 const eliminarReservaVuelo = async (req: Request, res: Response) => {
     try {
@@ -198,5 +225,6 @@ const eliminarReservaVuelo = async (req: Request, res: Response) => {
 
 export {
     crearReservaVuelo, listaDeReservaDeVuelos,
-    eliminarReservaVuelo, actualizarReservaVuelo
+    eliminarReservaVuelo, actualizarReservaVuelo,
+    misReservarVuelo
 }
