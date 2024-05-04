@@ -171,7 +171,6 @@ const eliminarVuelo = async (req: Request, res: Response) =>{
         }
 
         const vuelo = await VueloModel.findById({ _id: vueloId });
-        console.log(vuelo)
         if(!vuelo){
             return res.status(404).json({
                 success: false,

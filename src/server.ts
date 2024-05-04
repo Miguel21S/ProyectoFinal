@@ -7,6 +7,7 @@ import routerController from "./entities/controllers/routers";
 import routerUsuarios from "./entities/usuarios/router";
 import routerVuelos from "./entities/vuelos/router";
 import routerAlojamiento from "./entities/alojamientos/router";
+import routerReservaVuelos from "./entities/reservaVuelos/router";
 
 const app = express();
 const PORT = process.env.PORT || 2099;
@@ -18,6 +19,7 @@ app.use('/api', routerController);
 app.use('/api', routerUsuarios);
 app.use('/api', routerVuelos);
 app.use('/api', routerAlojamiento);
+app.use('/api', routerReservaVuelos);
 
 app.get("/api/healthy", (req, res) => {
     res.status(200).json({ success: true, message: "server is healthy" })
