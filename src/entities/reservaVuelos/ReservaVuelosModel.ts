@@ -7,21 +7,24 @@ interface ReservaVuelos extends Document {
     nameUsuario: string;
     idVuelo: Schema.Types.ObjectId;
     nameVuelo: string;
-    fecha: string;
-    hora: string;
-    estado: string,
+    fechaVuelo: string;
+    horaVuelo: string;
+    pago: number,
 }
 
 const ReservaVuelosSchema = new Schema<ReservaVuelos>(
     {
-        nameUsuario: String,
-        nameVuelo: String,
-        fecha: String,
-        hora: String,
+        
+    
         idUsuario:
         {
             type: Schema.Types.ObjectId,
             ref: "UsuarioModel"
+        },
+
+        nameUsuario: {
+            type: String,
+            required: false,
         },
 
         idVuelo:
@@ -30,10 +33,26 @@ const ReservaVuelosSchema = new Schema<ReservaVuelos>(
             ref: "VueloModel"
         },
 
-        estado: {
+        nameVuelo:  {
             type: String,
             required: false,
         },
+
+        fechaVuelo: {
+            type: String,
+            required: false,
+        },
+
+        horaVuelo: {
+            type: String,
+            required: false,
+        }, 
+
+        pago: {
+            type: Number,
+            required: true,
+        }, 
+
     },
     {
         timestamps: true,

@@ -12,20 +12,20 @@ const AlojamientoSchema = new Schema<Alojamiento>(
     {
         name: {
             type: String,
-            required: false,
+            required: true,
         },
 
         local: {
             type: String,
-            required: false,
+            required: true,
         },
         tipo: {
             type: String,
-            required: false,
+            required: true,
         },
         precio: {
             type: Number,
-            required: false,
+            required: true,
         },
     },
     {

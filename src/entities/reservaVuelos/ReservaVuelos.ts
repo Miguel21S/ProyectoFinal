@@ -8,7 +8,8 @@ const crearReservaVuelo = async (req: Request, res: Response)=>{
     try {
         const usuarioId = req.tokenData.usuarioId;
         const vueloId = req.params.id;
-        const { fecha, hora, estado } = req.body
+        let pagar;
+        let precioPagar = req.body.precioPagar;
 
         const usuario = await UsuarioModel.findOne({ _id: usuarioId });
         if(!usuario){
@@ -25,15 +26,16 @@ const crearReservaVuelo = async (req: Request, res: Response)=>{
                 message: "Vuelo no encontrado"
             })
         }
-
-        const rCreada = await ReservaVuelosModel.create({
-            fecha,
-            hora,
-            estado,
+        pagar = precioPagar === rVuelo?.precio ? 1 : 0;
+        
+        const rCreada = await ReservaVuelosModel.create({ 
+            pago: pagar,
             idUsuario: usuario?.id,
             nameUsuario: usuario?.name,
             idVuelo: rVuelo?.id,
             nameVuelo: rVuelo?.name,
+            fechaVuelo: rVuelo?.fechaIda,
+            horaVuelo: rVuelo?.horaIda,
         });
         
         res.status(200).json({

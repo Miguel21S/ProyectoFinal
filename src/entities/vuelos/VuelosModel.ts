@@ -21,28 +21,28 @@ const VueloSchema = new Schema<Vuelo>(
     {
         name: {
             type: String,
-            required: false,
+            required: true,
         },
 
         aerolinea: {
             type: String,
-            required: false,
+            required: true,
         },
 
         origen: {
             type: String,
-            required: false,
+            required: true,
         },
 
         destino: {
             type: String,
-            required: false,
+            required: true,
         },
 
 
         precio: {
             type: Number,
-            required: false,
+            required: true,
         },
 
         fechaIda: {
