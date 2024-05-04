@@ -56,14 +56,14 @@ const listaDeReservaDeVuelos = async (req: Request, res: Response) => {
     try {
         const usuarioAdmin = req.tokenData.usuarioId;
 
-        const adminUsuario = await UsuarioModel.findOne({ _id: usuarioAdmin });
-        if (!adminUsuario) {
+        const usuario = await UsuarioModel.findOne({ _id: usuarioAdmin });
+        if (!usuario) {
             return res.status(404).json({
                 success: false,
                 message: "Usuario autorizado no encontrado"
             })
         }
-        if (adminUsuario.role !== "superAdmin") {
+        if (usuario.role !== "superAdmin") {
             return res.status(404).json({
                 success: false,
                 messages: "No se puede mostrar la lista"
@@ -94,6 +94,51 @@ const listaDeReservaDeVuelos = async (req: Request, res: Response) => {
         })
     }
 }
+
+///////////////////   MÉTODO ELIMINAR RESERVA DE VUELO   ////////////////////
+const eliminarReservaVuelo = async (req: Request, res: Response) =>{
+    try {
+        const usuarioAdmin = req.tokenData.usuarioId;
+        const reservaVueloId = req.params.id;
+
+        const usuario = await UsuarioModel.findOne({_id: usuarioAdmin});
+        if(!usuario){
+            return res.status(404).json({
+                success: false,
+                message: "Usuario autorizado no encontrado"
+            })
+        }
+        
+        if(usuario.role  !== "superAdmin"){
+            return res.status(404).json({
+                success: false,
+                messages: "Usuario no autorizado"
+            })
+        }
+
+        const rVuelo = await ReservaVuelosModel.findById({ _id: reservaVueloId });
+        if(!rVuelo){
+            return res.status(404).json({
+                success: false,
+                message: "Reserva de Vuelo no encontrado"
+            })
+        }
+        
+        await ReservaVuelosModel.findByIdAndDelete( reservaVueloId );
+
+        res.status(200).json({
+            success: true,
+            message: "Reserva de Vuelo eliminado con suceso"
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "Error al eliminar Reserva de Vuelo"
+        })
+    }
+}
+
 export {
-    crearReservaVuelo, listaDeReservaDeVuelos
+    crearReservaVuelo, listaDeReservaDeVuelos,
+    eliminarReservaVuelo
 }
