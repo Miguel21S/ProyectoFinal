@@ -19,23 +19,23 @@ const crearReservaVuelo = async (req: Request, res: Response) => {
             })
         }
 
-        const rVuelo = await VueloModel.findOne({ _id: vueloId });
-        if (!rVuelo) {
+        const vuelo = await VueloModel.findOne({ _id: vueloId });
+        if (!vuelo) {
             return res.status(404).json({
                 success: false,
                 message: "Vuelo no encontrado"
             })
         }
-        pagar = precioPagar === rVuelo?.precio ? 1 : 0;
+        pagar = precioPagar === vuelo?.precio ? 1 : 0;
 
         const rCreada = await ReservaVuelosModel.create({
             pago: pagar,
             idUsuario: usuario?.id,
             nameUsuario: usuario?.name,
-            idVuelo: rVuelo?.id,
-            nameVuelo: rVuelo?.name,
-            fechaVuelo: rVuelo?.fechaIda,
-            horaVuelo: rVuelo?.horaIda,
+            idVuelo: vuelo?.id,
+            nameVuelo: vuelo?.name,
+            fechaVuelo: vuelo?.fechaIda,
+            horaVuelo: vuelo?.horaIda,
         });
 
         res.status(200).json({
@@ -95,21 +95,79 @@ const listaDeReservaDeVuelos = async (req: Request, res: Response) => {
     }
 }
 
+//////////////////////   MÉTODO ACTUALIZAR RESERVA DE VUELO   /////////////////////////
+const actualizarReservaVuelo = async (req: Request, res: Response) => {
+    try {
+        const usuarioId = req.tokenData.usuarioId;
+        const reservaVueloId = req.params.id;
+        let pago;
+        let precioPagar = req.body.precioPagar;
+
+        const usuario = await UsuarioModel.findOne({ _id: usuarioId });
+        if (!usuario) {
+            return res.status(404).json({
+                success: false,
+                message: "Usuario no encontrado"
+            })
+        }
+
+        const rVuelo = await ReservaVuelosModel.findOne({
+            _id: reservaVueloId,
+            idUsuario: usuarioId
+        });
+
+        if (!rVuelo) {
+            return res.status(404).json({
+                success: false,
+                message: "Reserva de Vuelo no encontrado",
+            })
+        }
+
+        const vuelo = await VueloModel.findOne({ _id: rVuelo?.idVuelo });
+        if (!vuelo) {
+            return res.status(404).json({
+                success: false,
+                message: "Vuelo no encontrado"
+            })
+        }
+
+        if (rVuelo) {
+            pago = precioPagar === vuelo?.precio ? 1 : 0;
+            rVuelo.pago = pago;
+            await rVuelo.save();
+        }
+
+        res.status(200).json(
+            {
+                success: true,
+                message: "Reserva de Vuelo actualizado con suceso"
+            }
+        )
+    } catch (error) {
+        return res.status(500).json(
+            {
+                success: false,
+                message: "Error en actualizar Reserva de Vuelo"
+            }
+        )
+    }
+}
+
 ///////////////////   MÉTODO ELIMINAR RESERVA DE VUELO   ////////////////////
-const eliminarReservaVuelo = async (req: Request, res: Response) =>{
+const eliminarReservaVuelo = async (req: Request, res: Response) => {
     try {
         const usuarioAdmin = req.tokenData.usuarioId;
         const reservaVueloId = req.params.id;
 
-        const usuario = await UsuarioModel.findOne({_id: usuarioAdmin});
-        if(!usuario){
+        const usuario = await UsuarioModel.findOne({ _id: usuarioAdmin });
+        if (!usuario) {
             return res.status(404).json({
                 success: false,
                 message: "Usuario autorizado no encontrado"
             })
         }
-        
-        if(usuario.role  !== "superAdmin"){
+
+        if (usuario.role !== "superAdmin") {
             return res.status(404).json({
                 success: false,
                 messages: "Usuario no autorizado"
@@ -117,14 +175,14 @@ const eliminarReservaVuelo = async (req: Request, res: Response) =>{
         }
 
         const rVuelo = await ReservaVuelosModel.findById({ _id: reservaVueloId });
-        if(!rVuelo){
+        if (!rVuelo) {
             return res.status(404).json({
                 success: false,
                 message: "Reserva de Vuelo no encontrado"
             })
         }
-        
-        await ReservaVuelosModel.findByIdAndDelete( reservaVueloId );
+
+        await ReservaVuelosModel.findByIdAndDelete(reservaVueloId);
 
         res.status(200).json({
             success: true,
@@ -140,5 +198,5 @@ const eliminarReservaVuelo = async (req: Request, res: Response) =>{
 
 export {
     crearReservaVuelo, listaDeReservaDeVuelos,
-    eliminarReservaVuelo
+    eliminarReservaVuelo, actualizarReservaVuelo
 }
