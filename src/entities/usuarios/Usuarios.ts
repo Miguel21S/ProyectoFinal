@@ -53,7 +53,7 @@ const actualizarUsuario = async (req: Request, res: Response) => {
             })
         }
 
-       const act =  await UsuarioModel.findByIdAndUpdate(
+       await UsuarioModel.findByIdAndUpdate(
             {
                 _id: IdUsuario
             },
@@ -71,7 +71,6 @@ const actualizarUsuario = async (req: Request, res: Response) => {
         res.status(200).json({
             success: true,
             message: "Usuario actualizado con suceso",
-            data: act
         })
     } catch (error) {
         return res.status(500).json({

@@ -15,7 +15,6 @@ interface ReservaVuelos extends Document {
 const ReservaVuelosSchema = new Schema<ReservaVuelos>(
     {
         
-    
         idUsuario:
         {
             type: Schema.Types.ObjectId,
