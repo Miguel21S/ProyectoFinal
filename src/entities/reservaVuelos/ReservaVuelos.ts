@@ -8,8 +8,8 @@ const crearReservaVuelo = async (req: Request, res: Response) => {
     try {
         const usuarioId = req.tokenData.usuarioId;
         const vueloId = req.params.id;
+        const { cantidadAsiento, precioPagar } = req.body;
         let pagar;
-        let precioPagar = req.body.precioPagar;
 
         const usuario = await UsuarioModel.findOne({ _id: usuarioId });
         if (!usuario) {
@@ -17,6 +17,12 @@ const crearReservaVuelo = async (req: Request, res: Response) => {
                 success: false,
                 message: "Usuario no encontrado"
             })
+        }
+        if (cantidadAsiento <= 0) {
+            return res.status(400).json({
+                success: false,
+                message: "La cantidad de asientos debe ser un número positivo"
+            });
         }
 
         const vuelo = await VueloModel.findOne({ _id: vueloId });
@@ -26,12 +32,24 @@ const crearReservaVuelo = async (req: Request, res: Response) => {
                 message: "Vuelo no encontrado"
             })
         }
+
+        if (vuelo.capacidadAsiento - cantidadAsiento < 0) {
+            return res.status(400).json({
+                success: false,
+                message: "La capacidad de asientos disponible no es suficiente para esta reserva"
+            });
+        }
+        vuelo.capacidadAsiento -= cantidadAsiento;
+        await vuelo.save();
+
         pagar = precioPagar === vuelo?.precio ? 1 : 0;
 
         const rCreada = await ReservaVuelosModel.create({
             pago: pagar,
+            cantidadAsiento: cantidadAsiento,
             idUsuario: usuario?.id,
             nameUsuario: usuario?.name,
+            emailUsuario: usuario?.email,
             idVuelo: vuelo?.id,
             nameVuelo: vuelo?.name,
             fechaVuelo: vuelo?.fechaIda,
@@ -71,12 +89,13 @@ const listaDeReservaDeVuelos = async (req: Request, res: Response) => {
         }
 
         const lista = await ReservaVuelosModel.find()
-            .select("idUsuario")
+            .select("emailUsuario")
             .select("nameUsuario")
             .select("idVuelo")
             .select("nameVuelo")
             .select("fechaVuelo")
             .select("horaVuelo")
+            .select("cantidad")
             .select("pago")
 
         res.status(200).json(
@@ -100,6 +119,7 @@ const actualizarReservaVuelo = async (req: Request, res: Response) => {
     try {
         const usuarioId = req.tokenData.usuarioId;
         const reservaVueloId = req.params.id;
+        const cantidadAsiento = req.body.cantidadAsiento;
         let pago;
         let precioPagar = req.body.precioPagar;
 
@@ -137,6 +157,9 @@ const actualizarReservaVuelo = async (req: Request, res: Response) => {
             await rVuelo.save();
         }
 
+        vuelo.capacidadAsiento -= cantidadAsiento;
+        await vuelo.save();
+
         res.status(200).json(
             {
                 success: true,
@@ -154,7 +177,7 @@ const actualizarReservaVuelo = async (req: Request, res: Response) => {
 }
 
 //////////////////////   MÉTODO LISTAR MIS RESERVA DE VUELO   /////////////////////////
-const misReservarVuelo = async (req: Request, res: Response)=> {
+const misReservarVuelo = async (req: Request, res: Response) => {
     try {
         const usuarioId = req.tokenData.usuarioId;
 
@@ -166,7 +189,7 @@ const misReservarVuelo = async (req: Request, res: Response)=> {
             })
         }
 
-        const rReservasVuelos = await ReservaVuelosModel.find( {idUsuario: usuarioId})
+        const rReservasVuelos = await ReservaVuelosModel.find({ idUsuario: usuarioId })
         res.status(200).json({
             success: true,
             message: "Mis Reservas de Vuelos encontrado con suceso",

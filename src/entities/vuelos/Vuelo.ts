@@ -6,19 +6,16 @@ import UsuarioModel from "../usuarios/UsuariosModel";
 //////////////////////   MÉTODO ADICIONAR VUELO   /////////////////////////
 const adicionarVuelo = async (req: Request, res: Response) => {
     try {
-        const name = req.body.name;
-        const aerolinea = req.body.aerolinea;
-        const origen = req.body.origen;
-        const destino = req.body.destino;
-        const precio = req.body.precio;
-        const fechaIda = req.body.fechaIda;
-        const horaIda = req.body.horaIda;
-        const fechaRegreso = req.body.fechaRegreso;
-        const horaRegreso = req.body.horaRegreso;
+        const {
+                name, aerolinea,capacidadAsiento, origen, destino,
+                precio, fechaIda, horaIda, fechaRegreso, horaRegreso
+            } = req.body;
+       
 
         const vueloAdicionado = await VueloModel.create({
             name: name,
             aerolinea: aerolinea,
+            capacidadAsiento: capacidadAsiento,
             origen: origen,
             destino: destino,
             precio: precio,

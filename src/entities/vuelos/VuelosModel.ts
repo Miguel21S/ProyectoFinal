@@ -4,6 +4,7 @@ import { Schema, model, Document } from "mongoose";
 interface Vuelo extends Document {
     name: string;
     aerolinea: string;
+    capacidadAsiento: number;
     origen: string;
     destino: string;
     precio: number;
@@ -26,6 +27,11 @@ const VueloSchema = new Schema<Vuelo>(
 
         aerolinea: {
             type: String,
+            required: true,
+        },
+
+        capacidadAsiento: {
+            type: Number,
             required: true,
         },
 
