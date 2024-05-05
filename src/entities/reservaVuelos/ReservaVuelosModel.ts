@@ -44,7 +44,7 @@ const ReservaVuelosSchema = new Schema<ReservaVuelos>(
         
         pago: {
             type: Number,
-            required: true,
+            required: false,
         },
 
     },

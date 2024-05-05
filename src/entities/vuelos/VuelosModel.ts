@@ -22,12 +22,12 @@ const VueloSchema = new Schema<Vuelo>(
     {
         name: {
             type: String,
-            required: true,
+            required: false,
         },
 
         aerolinea: {
             type: String,
-            required: true,
+            required: false,
         },
 
         capacidadAsiento: {
@@ -37,12 +37,12 @@ const VueloSchema = new Schema<Vuelo>(
 
         origen: {
             type: String,
-            required: true,
+            required: false,
         },
 
         destino: {
             type: String,
-            required: true,
+            required: false,
         },
 
 
@@ -53,22 +53,22 @@ const VueloSchema = new Schema<Vuelo>(
 
         fechaIda: {
             type: String,
-            required: true,
+            required: false,
         },
 
         horaIda: {
             type: String,
-            required: true,
+            required: false,
         },
 
         fechaRegreso: {
             type: String,
-            required: true,
+            required: false,
         },
 
         horaRegreso: {
             type: String,
-            required: true,
+            required: false,
         },
 
         fechaRegistro: {

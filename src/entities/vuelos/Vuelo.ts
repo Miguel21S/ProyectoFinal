@@ -76,16 +76,12 @@ const listarVuelos = async (req: Request, res: Response) => {
 const actualizarVuelo = async (req: Request, res: Response) =>{
     try {
         const usuarioAdmin = req.tokenData.usuarioId;
-        const idVuelo = req.body._id;
-        const name = req.body.name;
-        const aerolinea = req.body.aerolinea;
-        const origen = req.body.origen;
-        const destino = req.body.destino;
-        const precio = req.body.precio;
-        const fechaIda = req.body.fechaIda;
-        const horaIda = req.body.horaIda;
-        const fechaRegreso = req.body.fechaRegreso;
-        const horaRegreso = req.body.horaRegreso;       
+        const idVuelo = req.body.id;
+        const { 
+                name, aerolinea, capacidadAsiento, origen, destino,
+                precio, fechaIda, horaIda, fechaRegreso, horaRegreso
+            } = req.body;
+          
 
         const usuario = await UsuarioModel.findOne({_id: usuarioAdmin});
         if(!usuario){
@@ -116,6 +112,7 @@ const actualizarVuelo = async (req: Request, res: Response) =>{
             },
             {
                 name: name,
+                capacidadAsiento: capacidadAsiento,
                 aerolinea: aerolinea,
                 origen: origen,
                 destino: destino,

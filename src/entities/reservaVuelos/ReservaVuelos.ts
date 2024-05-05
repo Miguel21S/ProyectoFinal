@@ -120,7 +120,7 @@ const actualizarReservaVuelo = async (req: Request, res: Response) => {
         const usuarioId = req.tokenData.usuarioId;
         const reservaVueloId = req.params.id;
         const cantidadAsiento = req.body.cantidadAsiento;
-        let pago;
+        let pago, nuevaCantAsientoVuelo;
         let precioPagar = req.body.precioPagar;
 
         const usuario = await UsuarioModel.findOne({ _id: usuarioId });
@@ -143,6 +143,7 @@ const actualizarReservaVuelo = async (req: Request, res: Response) => {
             })
         }
 
+
         const vuelo = await VueloModel.findOne({ _id: rVuelo?.idVuelo });
         if (!vuelo) {
             return res.status(404).json({
@@ -151,14 +152,27 @@ const actualizarReservaVuelo = async (req: Request, res: Response) => {
             })
         }
 
-        if (rVuelo) {
-            pago = precioPagar === vuelo?.precio ? 1 : 0;
-            rVuelo.pago = pago;
-            await rVuelo.save();
-        }
+        pago = precioPagar === vuelo?.precio ? 1 : 0;
+        rVuelo.pago = pago;
+        await rVuelo.save();
 
-        vuelo.capacidadAsiento -= cantidadAsiento;
-        await vuelo.save();
+        if (rVuelo.cantidadAsiento === cantidadAsiento) {
+            await vuelo.save()
+        } else {
+            if (rVuelo.cantidadAsiento > cantidadAsiento) {
+                nuevaCantAsientoVuelo = rVuelo.cantidadAsiento;
+                rVuelo.cantidadAsiento = cantidadAsiento
+                await rVuelo.save();
+                vuelo.capacidadAsiento += nuevaCantAsientoVuelo - cantidadAsiento;
+                await vuelo.save();
+            } else {
+                nuevaCantAsientoVuelo = rVuelo.cantidadAsiento;
+                rVuelo.cantidadAsiento = cantidadAsiento;
+                await rVuelo.save();
+                vuelo.capacidadAsiento -= cantidadAsiento - nuevaCantAsientoVuelo;
+                await vuelo.save();
+            }
+        }
 
         res.status(200).json(
             {
