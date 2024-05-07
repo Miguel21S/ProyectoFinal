@@ -8,8 +8,9 @@ const crearReservaVuelo = async (req: Request, res: Response) => {
     try {
         const usuarioId = req.tokenData.usuarioId;
         const vueloId = req.params.id;
-        const { cantidadAsiento, precioPagar } = req.body;
-        let pagar;
+        const cantidadAsiento = req.body.cantidadAsiento;
+        const precioPagar = req.body.precioPagar;
+        let pago, valorApagar;
 
         const usuario = await UsuarioModel.findOne({ _id: usuarioId });
         if (!usuario) {
@@ -38,14 +39,25 @@ const crearReservaVuelo = async (req: Request, res: Response) => {
                 success: false,
                 message: "La capacidad de asientos disponible no es suficiente para esta reserva"
             });
+        }      
+
+        
+        valorApagar = vuelo?.precio * cantidadAsiento;
+        pago = valorApagar === precioPagar ? 1 : 0;
+        
+        if (precioPagar < valorApagar || precioPagar > valorApagar) {
+            return res.status(400).json({
+                success: false,
+                message: "Precio a pagar tiene que ser igual a precio * cantidad de reserva",
+                Total: `${vuelo?.precio * cantidadAsiento}`
+            });
         }
+
         vuelo.capacidadAsiento -= cantidadAsiento;
         await vuelo.save();
 
-        pagar = precioPagar === vuelo?.precio ? 1 : 0;
-
         const rCreada = await ReservaVuelosModel.create({
-            pago: pagar,
+            pago: pago,
             cantidadAsiento: cantidadAsiento,
             idUsuario: usuario?.id,
             nameUsuario: usuario?.name,
@@ -59,7 +71,7 @@ const crearReservaVuelo = async (req: Request, res: Response) => {
         res.status(200).json({
             success: true,
             message: "Reserva creada con suceso",
-            data: rCreada
+            // data: rCreada
         })
     } catch (error) {
         return res.status(500).json({
@@ -95,7 +107,7 @@ const listaDeReservaDeVuelos = async (req: Request, res: Response) => {
             .select("nameVuelo")
             .select("fechaVuelo")
             .select("horaVuelo")
-            .select("cantidad")
+            .select("cantidadAsiento")
             .select("pago")
 
         res.status(200).json(
@@ -120,7 +132,7 @@ const actualizarReservaVuelo = async (req: Request, res: Response) => {
         const usuarioId = req.tokenData.usuarioId;
         const reservaVueloId = req.params.id;
         const cantidadAsiento = req.body.cantidadAsiento;
-        let pago, nuevaCantAsientoVuelo;
+        let pago, nuevaCantAsientoVuelo, valorApagar;
         let precioPagar = req.body.precioPagar;
 
         const usuario = await UsuarioModel.findOne({ _id: usuarioId });
@@ -132,8 +144,7 @@ const actualizarReservaVuelo = async (req: Request, res: Response) => {
         }
 
         const rVuelo = await ReservaVuelosModel.findOne({
-            _id: reservaVueloId,
-            idUsuario: usuarioId
+            _id: reservaVueloId
         });
 
         if (!rVuelo) {
@@ -143,7 +154,6 @@ const actualizarReservaVuelo = async (req: Request, res: Response) => {
             })
         }
 
-
         const vuelo = await VueloModel.findOne({ _id: rVuelo?.idVuelo });
         if (!vuelo) {
             return res.status(404).json({
@@ -152,7 +162,30 @@ const actualizarReservaVuelo = async (req: Request, res: Response) => {
             })
         }
 
-        pago = precioPagar === vuelo?.precio ? 1 : 0;
+        if (cantidadAsiento <= 0) {
+            return res.status(400).json({
+                success: false,
+                message: "La cantidad de asientos debe ser un número positivo"
+            });
+        }
+
+        if (vuelo.capacidadAsiento - cantidadAsiento < 0) {
+            return res.status(400).json({
+                success: false,
+                message: "La capacidad de asientos disponible no es suficiente para esta reserva"
+            });
+        }
+
+        valorApagar = vuelo?.precio * cantidadAsiento;
+        if (precioPagar < valorApagar || precioPagar > valorApagar) {
+            return res.status(400).json({
+                success: false,
+                message: "Precio a pagar tiene que ser igual a precio * cantidad de reserva",
+                Total: `${vuelo?.precio * cantidadAsiento}`
+            });
+        }
+
+        pago =  valorApagar === precioPagar ? 1 : 0;
         rVuelo.pago = pago;
         await rVuelo.save();
 

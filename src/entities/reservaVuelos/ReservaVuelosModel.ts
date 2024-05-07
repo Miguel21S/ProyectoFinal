@@ -4,15 +4,15 @@ import { Document, model, Schema } from "mongoose";
 interface ReservaVuelos extends Document {
     idUsuario: Schema.Types.ObjectId;
     nameUsuario: string;
-    emailUsuario: string
+    emailUsuario: string;
     idVuelo: Schema.Types.ObjectId;
     nameVuelo: string;
     origeVuelo: string;
     destinoVuelo: string;
     fechaVuelo: string;
     horaVuelo: string;
-    cantidadAsiento: number,
-    pago: number,
+    cantidadAsiento: number;
+    pago: number;
 }
 
 const ReservaVuelosSchema = new Schema<ReservaVuelos>(

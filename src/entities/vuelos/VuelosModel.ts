@@ -24,53 +24,42 @@ const VueloSchema = new Schema<Vuelo>(
             type: String,
             required: false,
         },
-
         aerolinea: {
             type: String,
             required: false,
         },
-
         capacidadAsiento: {
             type: Number,
             required: true,
         },
-
         origen: {
             type: String,
             required: false,
         },
-
         destino: {
             type: String,
             required: false,
         },
-
-
         precio: {
             type: Number,
             required: true,
         },
-
         fechaIda: {
             type: String,
             required: false,
         },
-
         horaIda: {
             type: String,
             required: false,
         },
-
         fechaRegreso: {
             type: String,
             required: false,
         },
-
         horaRegreso: {
             type: String,
             required: false,
         },
-
         fechaRegistro: {
             type: Date,
             default: Date.now

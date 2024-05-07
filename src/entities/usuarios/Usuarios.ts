@@ -123,6 +123,36 @@ const eliminarUsuarioId = async (req: Request, res: Response)=> {
     }
 }
 
+//////////////////////   MÉTODO MI PERFIL   /////////////////////////
+const miPerfil = async (req: Request, res: Response) =>{
+    try {
+        const usuarioId = req.tokenData.usuarioId;
+        const usuario =await UsuarioModel.findOne({_id: usuarioId});
+        if(!usuario){
+            return res.status(404).json({
+                success: false,
+                message: "Usuario no encontrado"
+            })
+        }
+
+        const perfil = await UsuarioModel.find({ _id: usuario?._id })
+            .select("name")
+            .select("apellido")
+            .select("email")
+
+        res.status(200).json(
+            {
+                success: true,
+                message: "My Profile",
+                data: perfil
+            }
+        )
+
+    } catch (error) {
+        
+    }
+}
+
 export {
     listarTodosUsuarios, actualizarUsuario, eliminarUsuarioId
 }

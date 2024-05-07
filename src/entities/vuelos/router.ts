@@ -7,8 +7,8 @@ import * as vuelos from "./Vuelo";
 const router = Router();
 
 router.post('/auth/vuelo', auth, isSuperAdmin, vuelos.adicionarVuelo);
-router.get('/auth/vuelo', auth, isSuperAdmin, vuelos.listarVuelos);
-router.put('/auth/vuelo', auth, isSuperAdmin, vuelos.actualizarVuelo);
+router.get('/auth/vuelo', vuelos.listarVuelos);
+router.put('/auth/vuelo/:id', auth, isSuperAdmin, vuelos.actualizarVuelo);
 router.delete('/auth/vuelo/:id', auth, isSuperAdmin, vuelos.eliminarVuelo);
 
 export default router;

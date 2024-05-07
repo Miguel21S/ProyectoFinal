@@ -6,6 +6,7 @@ import UsuarioModel from "../usuarios/UsuariosModel";
 //////////////////////   MÉTODO ADICIONAR VUELO   /////////////////////////
 const adicionarVuelo = async (req: Request, res: Response) => {
     try {
+        const img = req.body.img;
         const {
                 name, aerolinea,capacidadAsiento, origen, destino,
                 precio, fechaIda, horaIda, fechaRegreso, horaRegreso
@@ -47,6 +48,7 @@ const listarVuelos = async (req: Request, res: Response) => {
         const vuelos = await VueloModel.find()
         .select("name")
         .select("aerolinea")
+        .select("capacidadAsiento")
         .select("origen")
         .select("destino")
         .select("fechaIda")
@@ -76,7 +78,7 @@ const listarVuelos = async (req: Request, res: Response) => {
 const actualizarVuelo = async (req: Request, res: Response) =>{
     try {
         const usuarioAdmin = req.tokenData.usuarioId;
-        const idVuelo = req.body.id;
+        const idVuelo = req.params.id;
         const { 
                 name, aerolinea, capacidadAsiento, origen, destino,
                 precio, fechaIda, horaIda, fechaRegreso, horaRegreso
@@ -106,14 +108,14 @@ const actualizarVuelo = async (req: Request, res: Response) =>{
             }) 
         }
         
-        await VueloModel.findByIdAndUpdate(
+        const act = await VueloModel.findByIdAndUpdate(
             {
                 _id:idVuelo
             },
             {
                 name: name,
-                capacidadAsiento: capacidadAsiento,
                 aerolinea: aerolinea,
+                capacidadAsiento: capacidadAsiento,
                 origen: origen,
                 destino: destino,
                 precio: precio,
@@ -126,7 +128,6 @@ const actualizarVuelo = async (req: Request, res: Response) =>{
                 new: true
             }
         )
-
         res.status(200).json(
             {
                 success: true,
