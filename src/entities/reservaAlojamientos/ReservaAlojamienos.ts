@@ -104,11 +104,11 @@ const listarReservaAlojamiento = async (req: Request, res: Response) => {
 //////////////////////   MÉTODO EDITAR RESERVA DE ALOJAMIENTO   /////////////////////////
 const editarReservaAlojamiento = async (req: Request, res: Response) => {
     try {
-        const idUsuario = req.tokenData.usuarioId;
+        const usuarioId = req.tokenData.usuarioId;
         const idReservaAlojamiento = req.params.id;
         const { fechaEntrada, horaEntrada, fechaSalida, horaSalida } = req.body
 
-        const usuario = await UsuarioModel.findOne({ _id: idUsuario });
+        const usuario = await UsuarioModel.findOne({ _id: usuarioId });
         if (!usuario) {
             return res.status(404).json({
                 success: false,
@@ -124,7 +124,7 @@ const editarReservaAlojamiento = async (req: Request, res: Response) => {
             })
         }
 
-        if (usuario.role !== "superAdmin" && usuario._id !== idUsuario) {
+        if (!(usuario.role === "superAdmin" || usuario._id.equals(reservaAlojamiento.idUsuario))) {
             return res.status(404).json({
                 success: false,
                 message: "No se puede permitir editar la reserva"
@@ -177,8 +177,8 @@ const eliminarReservaAlojamiento = async (req: Request, res: Response) => {
             })
         }
 
-        if (usuario.role !== "superAdmin" && usuario._id !== idUsuario) {
-            return res.status(404).json({
+        if (!(usuario.role !== "superAdmin" || usuario._id.equals(idUsuario))) {
+            return res.status(403).json({
                 success: false,
                 message: "No puedes eliminar la reserva de alojamiento"
             })
@@ -219,7 +219,7 @@ const misReservarAlojamiento = async (req: Request, res: Response) => {
         }
         res.status(200).json({
             success: true,
-            message: "Mis Reservas de Vuelos encontrado con suceso",
+            message: "Mis Reservas encontrado con suceso",
             data: rReservasAlojamiento
         })
     } catch (error) {
