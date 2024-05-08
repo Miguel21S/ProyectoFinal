@@ -6,7 +6,6 @@ import UsuarioModel from "../usuarios/UsuariosModel";
 //////////////////////   MÉTODO ADICIONAR VUELO   /////////////////////////
 const adicionarVuelo = async (req: Request, res: Response) => {
     try {
-        const img = req.body.img;
         const {
                 name, aerolinea,capacidadAsiento, origen, destino,
                 precio, fechaIda, horaIda, fechaRegreso, horaRegreso
@@ -108,14 +107,14 @@ const actualizarVuelo = async (req: Request, res: Response) =>{
             }) 
         }
         
-        const act = await VueloModel.findByIdAndUpdate(
+        await VueloModel.findByIdAndUpdate(
             {
                 _id:idVuelo
             },
             {
                 name: name,
-                aerolinea: aerolinea,
                 capacidadAsiento: capacidadAsiento,
+                aerolinea: aerolinea,
                 origen: origen,
                 destino: destino,
                 precio: precio,
@@ -128,6 +127,7 @@ const actualizarVuelo = async (req: Request, res: Response) =>{
                 new: true
             }
         )
+
         res.status(200).json(
             {
                 success: true,

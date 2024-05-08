@@ -143,16 +143,20 @@ const miPerfil = async (req: Request, res: Response) =>{
         res.status(200).json(
             {
                 success: true,
-                message: "My Profile",
+                message: "Perfil encontrado con suceso",
                 data: perfil
             }
         )
 
     } catch (error) {
-        
+        return res.status(500).json({
+            success: false,
+            message: "Error en mostrar los datos del perfil"
+        })
     }
 }
 
 export {
-    listarTodosUsuarios, actualizarUsuario, eliminarUsuarioId
+    listarTodosUsuarios, actualizarUsuario,
+    eliminarUsuarioId, miPerfil
 }

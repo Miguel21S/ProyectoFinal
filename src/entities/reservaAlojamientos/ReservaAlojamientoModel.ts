@@ -6,25 +6,24 @@ interface ReservaAlojamientos extends Document {
     nameAlojamiento: string;
     idUsuario: Schema.Types.ObjectId;
     nameUsuario: string;
+    apellidoUsuario: string;
     emailUsuario: string;
     fechaEntrada: string;
     horaEntrada: string;
     fechaSalida: string;
     horaSalida: string;
-    ciudad: string;
 }
 
 const ReservaAlojamientoSchama = new Schema<ReservaAlojamientos>(
     {
         nameAlojamiento: String,
         nameUsuario: String,
+        apellidoUsuario: String,
         emailUsuario: String,
-
         fechaEntrada: String,
         horaEntrada: String,
         fechaSalida: String,
         horaSalida: String,
-        ciudad: String,
 
         idAlojamiento: {
             type: Schema.Types.ObjectId,
