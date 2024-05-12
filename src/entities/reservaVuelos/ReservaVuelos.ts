@@ -279,7 +279,6 @@ const misReservarVuelo = async (req: Request, res: Response) => {
         .select("horaVuelo")
         .select("precioPagar")
         
-        console.log(rReservasVuelos)
         res.status(200).json({
             success: true,
             message: "Mis Reservas de Vuelos encontrado con suceso",
