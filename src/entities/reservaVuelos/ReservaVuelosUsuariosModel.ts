@@ -1,26 +1,30 @@
 
 import { Document, model, Schema } from "mongoose";
 
-interface ReservaVuelos extends Document {
+interface ReservaVuelosUsuarios extends Document {
     idUsuario: Schema.Types.ObjectId;
     nameUsuario: string;
+    nameApellido: string;
     emailUsuario: string;
     idVuelo: Schema.Types.ObjectId;
     nameVuelo: string;
-    origeVuelo: string;
+    aerolineaVuelo:string;
+    origenVuelo: string;
     destinoVuelo: string;
     fechaVuelo: string;
     horaVuelo: string;
     cantidadAsiento: number;
-    pago: number;
+    precioPagar: number;
 }
 
-const ReservaVuelosSchema = new Schema<ReservaVuelos>(
+const ReservaVuelosUsuariosSchema = new Schema<ReservaVuelosUsuarios>(
     {
         nameUsuario: String,
+        nameApellido: String,
         emailUsuario: String,
         nameVuelo: String,
-        origeVuelo: String,
+        aerolineaVuelo:String,
+        origenVuelo: String,
         destinoVuelo: String,
         fechaVuelo: String,
         horaVuelo: String, 
@@ -42,9 +46,9 @@ const ReservaVuelosSchema = new Schema<ReservaVuelos>(
             required: true,
         }, 
         
-        pago: {
+        precioPagar: {
             type: Number,
-            required: false,
+            required: true,
         },
 
     },
@@ -53,5 +57,5 @@ const ReservaVuelosSchema = new Schema<ReservaVuelos>(
         versionKey: false,
     }
 )
-const ReservaVuelosModel = model<ReservaVuelos>("ReservaVuelos", ReservaVuelosSchema);
-export default ReservaVuelosModel;
+const ReservaVuelosUsuariosModel = model<ReservaVuelosUsuarios>("ReservaVuelosUsuarios", ReservaVuelosUsuariosSchema);
+export default ReservaVuelosUsuariosModel;

@@ -1,7 +1,9 @@
+
 import { Request, Response } from "express";
 import UsuarioModel from "../usuarios/UsuariosModel";
 import VueloModel from "../vuelos/VuelosModel";
-import ReservaVuelosModel from "./ReservaVuelosModel";
+import ReservaVuelosUsuariosModel from "./ReservaVuelosUsuariosModel";
+import ReservaVueloSuperAdminModel from "./ReservaVueloSuperAdminModel";
 
 ///////////////////   MÉTODO HACER RESERVA DE VUELO   ////////////////////
 const crearReservaVuelo = async (req: Request, res: Response) => {
@@ -10,7 +12,7 @@ const crearReservaVuelo = async (req: Request, res: Response) => {
         const vueloId = req.params.id;
         const cantidadAsiento = req.body.cantidadAsiento;
         const precioPagar = req.body.precioPagar;
-        let pago, valorApagar;
+        let valorApagar;
 
         const usuario = await UsuarioModel.findOne({ _id: usuarioId });
         if (!usuario) {
@@ -39,12 +41,10 @@ const crearReservaVuelo = async (req: Request, res: Response) => {
                 success: false,
                 message: "La capacidad de asientos disponible no es suficiente para esta reserva"
             });
-        }      
+        }
 
-        
+
         valorApagar = vuelo?.precio * cantidadAsiento;
-        pago = valorApagar === precioPagar ? 1 : 0;
-        
         if (precioPagar < valorApagar || precioPagar > valorApagar) {
             return res.status(400).json({
                 success: false,
@@ -56,14 +56,35 @@ const crearReservaVuelo = async (req: Request, res: Response) => {
         vuelo.capacidadAsiento -= cantidadAsiento;
         await vuelo.save();
 
-        const rCreada = await ReservaVuelosModel.create({
-            pago: pago,
+
+        const rCreada = await ReservaVuelosUsuariosModel.create({
+            precioPagar: precioPagar,
             cantidadAsiento: cantidadAsiento,
             idUsuario: usuario?.id,
             nameUsuario: usuario?.name,
+            nameApellido: usuario?.apellido,
             emailUsuario: usuario?.email,
             idVuelo: vuelo?.id,
             nameVuelo: vuelo?.name,
+            aerolineaVuelo: vuelo?.aerolinea,
+            origenVuelo: vuelo?.origen,
+            destinoVuelo: vuelo?.destino,
+            fechaVuelo: vuelo?.fechaIda,
+            horaVuelo: vuelo?.horaIda,
+        });
+
+        const rCreadaSuperAdmin = await ReservaVueloSuperAdminModel.create({
+            precioPagar: precioPagar,
+            cantidadAsiento: cantidadAsiento,
+            idUsuario: usuario?.id,
+            nameUsuario: usuario?.name,
+            nameApellido: usuario?.apellido,
+            emailUsuario: usuario?.email,
+            idVuelo: vuelo?.id,
+            nameVuelo: vuelo?.name,
+            aerolineaVuelo: vuelo?.aerolinea,
+            origenVuelo: vuelo?.origen,
+            destinoVuelo: vuelo?.destino,
             fechaVuelo: vuelo?.fechaIda,
             horaVuelo: vuelo?.horaIda,
         });
@@ -100,7 +121,7 @@ const listaDeReservaDeVuelos = async (req: Request, res: Response) => {
             })
         }
 
-        const lista = await ReservaVuelosModel.find()
+        const listaUsuarios = await ReservaVuelosUsuariosModel.find()
             .select("emailUsuario")
             .select("nameUsuario")
             .select("idVuelo")
@@ -108,13 +129,23 @@ const listaDeReservaDeVuelos = async (req: Request, res: Response) => {
             .select("fechaVuelo")
             .select("horaVuelo")
             .select("cantidadAsiento")
-            .select("pago")
+            .select("precioPagar")
+
+        const listaSuperAdmin = await ReservaVueloSuperAdminModel.find()
+            .select("emailUsuario")
+            .select("nameUsuario")
+            .select("idVuelo")
+            .select("nameVuelo")
+            .select("fechaVuelo")
+            .select("horaVuelo")
+            .select("cantidadAsiento")
+            .select("precioPagar")
 
         res.status(200).json(
             {
                 success: true,
                 message: "Listado",
-                data: lista
+                data: listaSuperAdmin
             }
         )
 
@@ -132,8 +163,8 @@ const actualizarReservaVuelo = async (req: Request, res: Response) => {
         const usuarioId = req.tokenData.usuarioId;
         const reservaVueloId = req.params.id;
         const cantidadAsiento = req.body.cantidadAsiento;
-        let pago, nuevaCantAsientoVuelo, valorApagar;
-        let precioPagar = req.body.precioPagar;
+        const precioPagar = req.body.precioPagar;
+        let nuevaCantAsientoVuelo, valorApagar;
 
         const usuario = await UsuarioModel.findOne({ _id: usuarioId });
         if (!usuario) {
@@ -143,7 +174,7 @@ const actualizarReservaVuelo = async (req: Request, res: Response) => {
             })
         }
 
-        const rVuelo = await ReservaVuelosModel.findOne({
+        const rVuelo = await ReservaVuelosUsuariosModel.findOne({
             _id: reservaVueloId
         });
 
@@ -185,8 +216,7 @@ const actualizarReservaVuelo = async (req: Request, res: Response) => {
             });
         }
 
-        pago =  valorApagar === precioPagar ? 1 : 0;
-        rVuelo.pago = pago;
+        rVuelo.precioPagar = precioPagar;
         await rVuelo.save();
 
         if (rVuelo.cantidadAsiento === cantidadAsiento) {
@@ -236,7 +266,20 @@ const misReservarVuelo = async (req: Request, res: Response) => {
             })
         }
 
-        const rReservasVuelos = await ReservaVuelosModel.find({ idUsuario: usuarioId })
+        
+        const rReservasVuelos = await ReservaVuelosUsuariosModel.find({ idUsuario: usuarioId })
+        .select("nameUsuario")
+        .select("nameApellido")
+        .select("emailUsuario")
+        .select("nameVuelo")
+        .select("aerolineaVuelo")
+        .select("origeVuelo")
+        .select("origenVuelo")
+        .select("destinoVuelo")
+        .select("horaVuelo")
+        .select("precioPagar")
+        
+        console.log(rReservasVuelos)
         res.status(200).json({
             success: true,
             message: "Mis Reservas de Vuelos encontrado con suceso",
@@ -246,6 +289,50 @@ const misReservarVuelo = async (req: Request, res: Response) => {
         return res.status(500).json({
             success: false,
             message: "Error en encontrar Reservas de Vuelos"
+        })
+    }
+}
+
+//////////////////////   MÉTODO ELIMINAR MI RESERVA DE VUELO   /////////////////////////
+const eliminarMiReservaVuelo = async (req: Request, res: Response)=>{
+    try {
+        const idUsuario = req.tokenData.usuarioId;
+        const idResVuelo = req.params.id;
+       
+        const usuario = await UsuarioModel.findOne({ _id: idUsuario });
+        if (!usuario) {
+            return res.status(404).json({
+                success: false,
+                message: "Usuario no encontrado"
+            })
+        }
+
+        const rVuelo = await ReservaVuelosUsuariosModel.findById({ _id: idResVuelo });
+        if (!rVuelo) {
+            return res.status(404).json({
+                success: false,
+                message: "Reserva de Vuelo no encontrado"
+            })
+        }
+
+        const usuarioVuelo = await ReservaVuelosUsuariosModel.findOne( {idUsuario: usuario._id} );
+        if (!usuarioVuelo) {
+            return res.status(404).json({
+                success: false,
+                message: "Reserva de Vuelo no encontrado"
+            })
+        }
+
+
+        await ReservaVuelosUsuariosModel.findByIdAndDelete(idResVuelo);
+        res.status(200).json({
+            success: true,
+            message: "Reserva de Vuelo eliminado con suceso"
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "Error al eliminar Reserva de Vuelo del perfil"
         })
     }
 }
@@ -271,7 +358,7 @@ const eliminarReservaVuelo = async (req: Request, res: Response) => {
             })
         }
 
-        const rVuelo = await ReservaVuelosModel.findById({ _id: reservaVueloId });
+        const rVuelo = await ReservaVueloSuperAdminModel.findById({ _id: reservaVueloId });
         if (!rVuelo) {
             return res.status(404).json({
                 success: false,
@@ -279,7 +366,7 @@ const eliminarReservaVuelo = async (req: Request, res: Response) => {
             })
         }
 
-        await ReservaVuelosModel.findByIdAndDelete(reservaVueloId);
+        await ReservaVueloSuperAdminModel.findByIdAndDelete(reservaVueloId);
 
         res.status(200).json({
             success: true,
@@ -296,5 +383,5 @@ const eliminarReservaVuelo = async (req: Request, res: Response) => {
 export {
     crearReservaVuelo, listaDeReservaDeVuelos,
     eliminarReservaVuelo, actualizarReservaVuelo,
-    misReservarVuelo
+    misReservarVuelo, eliminarMiReservaVuelo
 }

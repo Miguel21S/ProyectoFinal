@@ -1,9 +1,10 @@
 import { Document, model, Schema } from "mongoose";
 
 
-interface ReservaAlojamientos extends Document {
+interface ReservaAlojamientoUsuario extends Document {
     idAlojamiento: Schema.Types.ObjectId;
     nameAlojamiento: string;
+    ciudadAlojamiento: string;
     idUsuario: Schema.Types.ObjectId;
     nameUsuario: string;
     apellidoUsuario: string;
@@ -14,9 +15,10 @@ interface ReservaAlojamientos extends Document {
     horaSalida: string;
 }
 
-const ReservaAlojamientoSchama = new Schema<ReservaAlojamientos>(
+const ReservaAlojamientoUsuariosSchama = new Schema<ReservaAlojamientoUsuario>(
     {
         nameAlojamiento: String,
+        ciudadAlojamiento: String,
         nameUsuario: String,
         apellidoUsuario: String,
         emailUsuario: String,
@@ -40,5 +42,5 @@ const ReservaAlojamientoSchama = new Schema<ReservaAlojamientos>(
         versionKey: false,
     }
 )
-const ReservaAlojamientosModel = model<ReservaAlojamientos>("ReservaAlojamientos", ReservaAlojamientoSchama);
-export default ReservaAlojamientosModel;
+const ReservaAlojamientoUsuarioModel = model<ReservaAlojamientoUsuario>("ReservaAlojamientoUsuario", ReservaAlojamientoUsuariosSchama);
+export default ReservaAlojamientoUsuarioModel;

@@ -1,8 +1,9 @@
 
 import { Request, Response } from "express";
 import UsuarioModel from "../usuarios/UsuariosModel";
+import ReservaAlojamientoUsuarioModel from "./ReservaAlojamientoUsuarioModel";
+import ReservaAlojamientoSuperAdminModel from "./ReservaAlojamientoSuperAdminModel";
 import AlojamientoModel from "../alojamientos/AlojamientosModel";
-import ReservaAlojamientosModel from "./ReservaAlojamientoModel";
 
 //////////////////////   MÉTODO CREAR RESERVA DE ALOJAMIENTO   /////////////////////////
 const crearReservaAlojamiento = async (req: Request, res: Response) => {
@@ -27,10 +28,11 @@ const crearReservaAlojamiento = async (req: Request, res: Response) => {
             })
         }
 
-        const crearreserva = await ReservaAlojamientosModel.create(
+        const crearreservaUsuario = await ReservaAlojamientoUsuarioModel.create(
             {
                 idAlojamiento: alojamiento._id,
                 nameAlojamiento: alojamiento.name,
+                ciudadAlojamiento: alojamiento.ciudad,
                 idUsuario: usuario._id,
                 nameUsuario: usuario.name,
                 apellidoUsuario: usuario.apellido,
@@ -41,10 +43,27 @@ const crearReservaAlojamiento = async (req: Request, res: Response) => {
                 horaSalida: horaSalida
             }
         )
+
+        const crearreservaSuperAdmin = await ReservaAlojamientoSuperAdminModel.create(
+            {
+                idAlojamiento: alojamiento._id,
+                nameAlojamiento: alojamiento.name,
+                ciudadAlojamiento: alojamiento.ciudad,
+                idUsuario: usuario._id,
+                nameUsuario: usuario.name,
+                apellidoUsuario: usuario.apellido,
+                emailUsuario: usuario.email,
+                fechaEntrada: fechaEntrada,
+                horaEntrada: horaEntrada,
+                fechaSalida: fechaSalida,
+                horaSalida: horaSalida
+            }
+        )
+
         res.status(200).json({
             success: true,
             message: "Reserva creada con suceso",
-            data: crearreserva
+            data: crearreservaUsuario
         })
     } catch (error) {
         return res.status(500).json({
@@ -58,7 +77,6 @@ const crearReservaAlojamiento = async (req: Request, res: Response) => {
 const listarReservaAlojamiento = async (req: Request, res: Response) => {
     try {
         const usuarioId = req.tokenData.usuarioId;
-
         const usuario = await UsuarioModel.findOne({ _id: usuarioId });
         if (!usuario) {
             return res.status(404).json({
@@ -74,9 +92,24 @@ const listarReservaAlojamiento = async (req: Request, res: Response) => {
             })
         }
 
-        const lista = await ReservaAlojamientosModel.find()
+        const listaUsuario = await ReservaAlojamientoUsuarioModel.find()
             .select("idAlojamiento")
             .select("nameAlojamiento")
+            .select("ciudadAlojamiento")
+            .select("idUsuario")
+            .select("nameUsuario")
+            .select("apellidoUsuario")
+            .select("emailUsuario")
+            .select("fechaEntrada")
+            .select("horaEntrada")
+            .select("emailUsuario")
+            .select("fechaSalida")
+            .select("horaSalida")
+
+        const listaAdmin = await ReservaAlojamientoSuperAdminModel.find()
+            .select("idAlojamiento")
+            .select("nameAlojamiento")
+            .select("ciudadAlojamiento")
             .select("idUsuario")
             .select("nameUsuario")
             .select("apellidoUsuario")
@@ -91,7 +124,7 @@ const listarReservaAlojamiento = async (req: Request, res: Response) => {
         res.status(200).json({
             success: true,
             message: "Lista de reservas de alojamiento",
-            data: lista
+            data: listaUsuario
         })
     } catch (error) {
         return res.status(500).json({
@@ -116,7 +149,7 @@ const editarReservaAlojamiento = async (req: Request, res: Response) => {
             })
         }
 
-        const reservaAlojamiento = await ReservaAlojamientosModel.findOne({ _id: idReservaAlojamiento });
+        const reservaAlojamiento = await ReservaAlojamientoUsuarioModel.findOne({ _id: idReservaAlojamiento });
         if (!reservaAlojamiento) {
             return res.status(404).json({
                 success: false,
@@ -131,7 +164,20 @@ const editarReservaAlojamiento = async (req: Request, res: Response) => {
             })
         }
 
-        await ReservaAlojamientosModel.findByIdAndUpdate(
+        await ReservaAlojamientoUsuarioModel.findByIdAndUpdate(
+            { _id: idReservaAlojamiento },
+            {
+                fechaEntrada,
+                horaEntrada,
+                fechaSalida,
+                horaSalida,
+            },
+            {
+                new: true
+            }
+        )
+
+        await ReservaAlojamientoSuperAdminModel.findByIdAndUpdate(
             { _id: idReservaAlojamiento },
             {
                 fechaEntrada,
@@ -169,7 +215,7 @@ const eliminarReservaAlojamiento = async (req: Request, res: Response) => {
             })
         }
 
-        const reservaAlojamiento = await ReservaAlojamientosModel.findOne({ _id: idReservaAlojamiento });
+        const reservaAlojamiento = await ReservaAlojamientoUsuarioModel.findOne({ _id: idReservaAlojamiento });
         if (!reservaAlojamiento) {
             return res.status(404).json({
                 success: false,
@@ -184,7 +230,7 @@ const eliminarReservaAlojamiento = async (req: Request, res: Response) => {
             })
         }
 
-        await ReservaAlojamientosModel.findByIdAndDelete(idReservaAlojamiento)
+        await ReservaAlojamientoUsuarioModel.findByIdAndDelete(idReservaAlojamiento)
         res.status(200).json({
             success: true,
             message: "Reserva eliminada con suceso"
@@ -210,7 +256,7 @@ const misReservarAlojamiento = async (req: Request, res: Response) => {
             })
         }
 
-        const rReservasAlojamiento = await ReservaAlojamientosModel.find({ idUsuario: usuarioId })
+        const rReservasAlojamiento = await ReservaAlojamientoUsuarioModel.find({ idUsuario: usuarioId })
         if (!rReservasAlojamiento) {
             return res.status(404).json({
                 success: false,

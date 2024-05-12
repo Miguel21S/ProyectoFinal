@@ -10,6 +10,7 @@ router.post('/reserva/vuelo/:id', auth, reservaVuelo.crearReservaVuelo);
 router.get('/lista/reserva/vuelo', auth, isSuperAdmin, reservaVuelo.listaDeReservaDeVuelos);
 router.get('/lista/mis/reserva/vuelo', auth, reservaVuelo.misReservarVuelo);
 router.put('/reserva/vuelo/:id', auth, isSuperAdmin, reservaVuelo.actualizarReservaVuelo);
+router.delete('/mireserva/vuelo/:id', auth, reservaVuelo.eliminarMiReservaVuelo);
 router.delete('/reserva/vuelo/:id', auth, isSuperAdmin, reservaVuelo.eliminarReservaVuelo);
 
 export default router;

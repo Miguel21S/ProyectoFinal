@@ -3,7 +3,7 @@ import { Document, model, Schema } from "mongoose";
 
 interface Alojamiento extends Document {
     name: string;
-    local: string;
+    ciudad: string;
     tipo: string;
     precio: number;
 }
@@ -15,7 +15,7 @@ const AlojamientoSchema = new Schema<Alojamiento>(
             required: true,
         },
 
-        local: {
+        ciudad: {
             type: String,
             required: true,
         },

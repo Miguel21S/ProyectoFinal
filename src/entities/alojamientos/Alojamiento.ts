@@ -8,7 +8,7 @@ const crearAlojamiento = async (req: Request, res: Response) => {
     try {
         const usuarioAdmin = req.tokenData.usuarioId;
         const precio = req.body.precio;
-        const { name, local, tipo } = req.body
+        const { name, ciudad, tipo } = req.body
 
         const usuario = await UsuarioModel.findOne({ _id: usuarioAdmin });
         if (!usuario) {
@@ -27,7 +27,7 @@ const crearAlojamiento = async (req: Request, res: Response) => {
 
         await AlojamientoModel.create({
             name: name,
-            local: local,
+            ciudad: ciudad,
             tipo: tipo,
             precio: precio
         })
@@ -51,25 +51,9 @@ const crearAlojamiento = async (req: Request, res: Response) => {
 //////////////////////   MÉTODO LISTA ALOJAMIENTO  /////////////////////////
 const listarAlojamiento = async (req: Request, res: Response) => {
     try {
-        const usuarioAdmin = req.tokenData.usuarioId;
-        const usuario = await UsuarioModel.findOne({ _id: usuarioAdmin });
-        if (!usuario) {
-            return res.status(404).json({
-                success: false,
-                message: "Usuario autorizado no encontrado"
-            })
-        }
-
-        if (usuario.role !== "superAdmin") {
-            return res.status(404).json({
-                success: false,
-                messages: "Usuario no autorizado"
-            })
-        }
-
         const alojamientos = await AlojamientoModel.find()
             .select("name")
-            .select("local")
+            .select("ciudad")
             .select("tipo")
             .select("precio")
 
@@ -95,7 +79,7 @@ const actualizarAlojamiento = async (req: Request, res: Response) => {
     try {
         const usuarioAdmin = req.tokenData.usuarioId;
         const alojamientoId = req.params.id;
-        const { name, local, tipo, precio} = req.body;
+        const { name, ciudad, tipo, precio} = req.body;
 
         const usuario = await UsuarioModel.findOne({ _id: usuarioAdmin });
         if (!usuario) {
@@ -126,7 +110,7 @@ const actualizarAlojamiento = async (req: Request, res: Response) => {
             },
             {
                 name: name,
-                local: local,
+                ciudad: ciudad,
                 tipo: tipo,
                 precio: precio
             }

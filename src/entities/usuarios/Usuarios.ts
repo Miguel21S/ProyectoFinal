@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import UsuarioModel from "./UsuariosModel";
-import ReservaAlojamientosModel from "../ReservaAlojamientos/ReservaAlojamientoModel";
+import ReservaAlojamientosModel from "../ReservaAlojamientos/ReservaAlojamientoUsuarioModel";
 
 //////////////////////   MÉTODO QUE LISTA TODOS USUARIOS   /////////////////////////
 const listarTodosUsuarios = async (req: Request, res: Response) => {
@@ -158,9 +158,6 @@ const miPerfil = async (req: Request, res: Response) => {
             })
         }
 
-        const misreservas = await ReservaAlojamientosModel.find({ idUsuario: usuarioId })
-            .select("nameAlojamiento")
-
         const perfil = await UsuarioModel.find({ _id: usuario?._id })
             .select("name")
             .select("apellido")
@@ -171,7 +168,7 @@ const miPerfil = async (req: Request, res: Response) => {
             {
                 success: true,
                 message: "Perfil encontrado con suceso",
-                data: perfil + " " + misreservas
+                data: perfil
             }
         )
 
