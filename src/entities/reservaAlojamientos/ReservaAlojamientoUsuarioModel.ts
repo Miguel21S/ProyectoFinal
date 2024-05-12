@@ -1,6 +1,5 @@
 import { Document, model, Schema } from "mongoose";
 
-
 interface ReservaAlojamientoUsuario extends Document {
     idAlojamiento: Schema.Types.ObjectId;
     nameAlojamiento: string;

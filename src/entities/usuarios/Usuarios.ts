@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import UsuarioModel from "./UsuariosModel";
-import ReservaAlojamientosModel from "../ReservaAlojamientos/ReservaAlojamientoUsuarioModel";
 
 //////////////////////   MÉTODO QUE LISTA TODOS USUARIOS   /////////////////////////
 const listarTodosUsuarios = async (req: Request, res: Response) => {

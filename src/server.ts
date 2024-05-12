@@ -8,7 +8,7 @@ import routerUsuarios from "./entities/usuarios/router";
 import routerVuelos from "./entities/vuelos/router";
 import routerAlojamiento from "./entities/alojamientos/router";
 import routerReservaVuelos from "./entities/reservaVuelos/router";
-import routerReservaAlojamientos from "./entities/ReservaAlojamientos/router";
+import routerReservaAlojamientos from "./entities/reservaAlojamientos/router";
 
 const app = express();
 const PORT = process.env.PORT || 2099;
