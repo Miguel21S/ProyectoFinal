@@ -74,7 +74,7 @@ const crearReservaAlojamiento = async (req: Request, res: Response) => {
 }
 
 //////////////////////   MÉTODO LISTAR MIS RESERVA DE ALOJAMIENTO   /////////////////////////
-const listarReservaAlojamiento = async (req: Request, res: Response) => {
+const listarReservaAlojamientoAdmin = async (req: Request, res: Response) => {
     try {
         const usuarioId = req.tokenData.usuarioId;
         const usuario = await UsuarioModel.findOne({ _id: usuarioId });
@@ -91,20 +91,6 @@ const listarReservaAlojamiento = async (req: Request, res: Response) => {
                 messages: "No se puede mostrar la lista"
             })
         }
-
-        const listaUsuario = await ReservaAlojamientoUsuarioModel.find()
-            .select("idAlojamiento")
-            .select("nameAlojamiento")
-            .select("ciudadAlojamiento")
-            .select("idUsuario")
-            .select("nameUsuario")
-            .select("apellidoUsuario")
-            .select("emailUsuario")
-            .select("fechaEntrada")
-            .select("horaEntrada")
-            .select("emailUsuario")
-            .select("fechaSalida")
-            .select("horaSalida")
 
         const listaAdmin = await ReservaAlojamientoSuperAdminModel.find()
             .select("idAlojamiento")
@@ -124,7 +110,7 @@ const listarReservaAlojamiento = async (req: Request, res: Response) => {
         res.status(200).json({
             success: true,
             message: "Lista de reservas de alojamiento",
-            data: listaUsuario
+            data: listaAdmin
         })
     } catch (error) {
         return res.status(500).json({
@@ -215,22 +201,29 @@ const eliminarReservaAlojamiento = async (req: Request, res: Response) => {
             })
         }
 
-        const reservaAlojamiento = await ReservaAlojamientoUsuarioModel.findOne({ _id: idReservaAlojamiento });
-        if (!reservaAlojamiento) {
-            return res.status(404).json({
-                success: false,
-                message: "Alojamiento no encontrado"
-            })
+        if (usuario.role === "superAdmin") {
+            const reservaAlojamiento = await ReservaAlojamientoSuperAdminModel.findOne({ _id: idReservaAlojamiento });
+            if (!reservaAlojamiento) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Alojamiento no encontrado"
+                })
+            }
+            await ReservaAlojamientoSuperAdminModel.findByIdAndDelete(idReservaAlojamiento)
+            await ReservaAlojamientoUsuarioModel.findByIdAndDelete(idReservaAlojamiento)
+
+        } else if (usuario._id.equals(idUsuario)) {
+            
+            const reservaAlojamiento = await ReservaAlojamientoUsuarioModel.findOne({ _id: idReservaAlojamiento });
+            if (!reservaAlojamiento) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Alojamiento no encontrado"
+                })
+            }
+            await ReservaAlojamientoUsuarioModel.findByIdAndDelete(idReservaAlojamiento)
         }
 
-        if (!(usuario.role !== "superAdmin" || usuario._id.equals(idUsuario))) {
-            return res.status(403).json({
-                success: false,
-                message: "No puedes eliminar la reserva de alojamiento"
-            })
-        }
-
-        await ReservaAlojamientoUsuarioModel.findByIdAndDelete(idReservaAlojamiento)
         res.status(200).json({
             success: true,
             message: "Reserva eliminada con suceso"
@@ -277,6 +270,6 @@ const misReservarAlojamiento = async (req: Request, res: Response) => {
 }
 
 export {
-    crearReservaAlojamiento, listarReservaAlojamiento, editarReservaAlojamiento,
+    crearReservaAlojamiento, listarReservaAlojamientoAdmin, editarReservaAlojamiento,
     eliminarReservaAlojamiento, misReservarAlojamiento
 }
