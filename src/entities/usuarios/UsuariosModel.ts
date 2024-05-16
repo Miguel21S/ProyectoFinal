@@ -1,3 +1,4 @@
+
 import { Document, model, Schema } from "mongoose";
 
 interface Usuario extends Document {
