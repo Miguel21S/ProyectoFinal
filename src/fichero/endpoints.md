@@ -1,5 +1,5 @@
 
-<li> <a href="./README.md">Regresar</a> </li>
+<li> <a href="/README.md">Regresar</a> </li>
 
 ## Lista completa de rutas
 
@@ -119,4 +119,4 @@ Eliminar reserva de alojamiento por id (DELETE)
 ````jsx
 http://localhost:2100/api/mireserva/vuelo/
 ````
-<li> <a href="./README.md">Regresar</a> </li>
+<li> <a href="/README.md">Regresar</a> </li>
