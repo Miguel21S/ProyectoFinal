@@ -7,10 +7,9 @@ import { isSuperAdmin } from "../../core/middlewares/isSuperAdministrador";
 const router = Router();
 
 router.post('/reserva/vuelo/:id', auth, reservaVuelo.crearReservaVuelo);
-router.get('/lista/reserva/vuelo', auth, isSuperAdmin, reservaVuelo.listaDeReservaDeVuelos);
-router.get('/lista/mis/reserva/vuelo', auth, reservaVuelo.misReservarVuelo);
-router.put('/reserva/vuelo/:id', auth, isSuperAdmin, reservaVuelo.actualizarReservaVuelo);
-router.delete('/mireserva/vuelo/:id', auth, reservaVuelo.eliminarMiReservaVuelo);
+router.get('/lista/reserva/vuelo/admin', auth, isSuperAdmin, reservaVuelo.listaDeReservaDeVuelosAdmin);
+router.get('/lista/reserva/vuelo/usuario', auth, reservaVuelo.misReservarVueloUsuario);
+// router.put('/reserva/vuelo/:id', auth, isSuperAdmin, reservaVuelo.actualizarReservaVuelo);
 router.delete('/reserva/vuelo/:id', auth, isSuperAdmin, reservaVuelo.eliminarReservaVuelo);
 
 export default router;

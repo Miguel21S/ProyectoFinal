@@ -77,6 +77,7 @@ Reserva de Vuelo
 | POST | /api/reserva/vuelo/:id | Hacer reserva de vuelos|
 | GET | /api/lista/reserva/vuelo | Listar reserva de vuelos (super_admin)|
 | GET | /api/lista/mis/reserva/vuelo | Listar reserva de vuelos desde el perfil|
+| DELETE | /api/reserva/vuelo/:id | Eliminar reserva de vuelo por id desde perfil de usuario|
 | DELETE | /api/reserva/vuelo/:id | Eliminar reserva de vuelo por id (super_admin)|
 
 Alojamientos
@@ -95,7 +96,8 @@ Reserva de Alojamientos
 | POST | /api/reserva/:id | hacer reserva de alojamientos|
 | GET | /api/reserva | Listar Reserva de alojamientos (super_admin)|
 | GET | /api/lista/mis/reserva | Listar todas reserva de alojamientos desde el perfil|
-| PUT | /api/actualizar/reserva/:id | Actualizar reserva de alojamientos por id|
+| PUT | /api/actualizar/reserva/:id | Actualizar reserva de alojamientos por id (super_admin)|
+| DELETE | /api/eliminar/reserva/:id | Eliminar reserva de alojamientos por id desde perfil de usuario|
 | DELETE | /api/eliminar/reserva/:id | Eliminar reserva de alojamientos por id (super_admin)|
 
 El proyecto se encuentra en estado de construicción, a pesar de cumplir con todos los requisitos exigidos y algunos extras.
