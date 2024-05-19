@@ -299,14 +299,13 @@ const eliminarReservaVuelo = async (req: Request, res: Response) => {
         }
 
         if (usuario.role === "superAdmin") {
-            const rVuelo = await ReservaVueloSuperAdminModel.findById({ _id: reservaVueloId });
+            const rVuelo = await ReservaVueloSuperAdminModel.findOne({ _id: reservaVueloId });
             if (!rVuelo) {
                 return res.status(404).json({
                     success: false,
                     message: "Reserva de Vuelo no encontrado"
                 })
             }
-            
             await ReservaVueloSuperAdminModel.findByIdAndDelete(reservaVueloId);
             await ReservaVuelosUsuariosModel.findByIdAndDelete(reservaVueloId)
 
