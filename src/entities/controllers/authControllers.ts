@@ -22,7 +22,7 @@ const registrar = async (req: Request, res: Response) => {
         if (!validPwd.test(password)) {
             return res.status(404).json({
                 success: false,
-                message: "La clave de tener pelo menos 1 número, caracter especial, letra mayuscula, y minuscula "
+                message: "La clave de tener pelo menos un número, un caracter especial, un letra mayuscula, y minuscula "
             })
         }
 

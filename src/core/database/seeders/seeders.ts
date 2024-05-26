@@ -21,10 +21,10 @@ const createSeedData = async () => {
 
         // Crear un superAdmin
         const superAdmin = new UsuarioModel({
-            name: 'Super',
-            apellido: 'Admin',
-            email: 'superadmin@example.com',
-            password: bcrypt.hashSync('Super12345.', 8),
+            name: 'Miguel',
+            apellido: 'SuperAdmin',
+            email: 'miguel@gmail.com',
+            password: bcrypt.hashSync('Miguel.1234', 8),
             role: 'superAdmin',
         });
         await superAdmin.save();

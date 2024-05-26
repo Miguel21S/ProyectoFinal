@@ -135,33 +135,33 @@ const editarReservaAlojamiento = async (req: Request, res: Response) => {
             })
         }
 
-        const reservaAlojamiento = await ReservaAlojamientoUsuarioModel.findOne({ _id: idReservaAlojamiento });
-        if (!reservaAlojamiento) {
-            return res.status(404).json({
-                success: false,
-                message: "Alojamiento no encontrado"
-            })
-        }
+        // const reservaAlojamiento = await ReservaAlojamientoUsuarioModel.findOne({ _id: idReservaAlojamiento });
+        // if (!reservaAlojamiento) {
+        //     return res.status(404).json({
+        //         success: false,
+        //         message: "Alojamiento no encontrado"
+        //     })
+        // }
 
-        if (!(usuario.role === "superAdmin" || usuario._id.equals(reservaAlojamiento.idUsuario))) {
+        if (!(usuario.role === "superAdmin")) {
             return res.status(404).json({
                 success: false,
                 message: "No se puede permitir editar la reserva"
             })
         }
 
-        await ReservaAlojamientoUsuarioModel.findByIdAndUpdate(
-            { _id: idReservaAlojamiento },
-            {
-                fechaEntrada,
-                horaEntrada,
-                fechaSalida,
-                horaSalida,
-            },
-            {
-                new: true
-            }
-        )
+        // await ReservaAlojamientoUsuarioModel.findByIdAndUpdate(
+        //     { _id: idReservaAlojamiento },
+        //     {
+        //         fechaEntrada,
+        //         horaEntrada,
+        //         fechaSalida,
+        //         horaSalida,
+        //     },
+        //     {
+        //         new: true
+        //     }
+        // )
 
         await ReservaAlojamientoSuperAdminModel.findByIdAndUpdate(
             { _id: idReservaAlojamiento },
