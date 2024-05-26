@@ -126,6 +126,7 @@ http://localhost:2100/api/auth/register
 ```jsx
 {
     "name":"Miguel",
+    "apellido": 'SuperAdmin',
     "email":"miguel@gmail.com",
     "password": "Miguel.1234"
 }

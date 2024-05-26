@@ -36,7 +36,7 @@ const createSeedData = async () => {
                 name: faker.name.firstName(),
                 apellido: faker.name.lastName(),
                 email: faker.internet.email().toLowerCase(),
-                password: bcrypt.hashSync('User123456.', 8),
+                password: bcrypt.hashSync('User1234.', 8),
                 role: 'user',
             });
             await user.save();
