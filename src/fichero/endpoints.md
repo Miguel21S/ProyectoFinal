@@ -67,15 +67,6 @@ Listar reservas de vuelos (GET)
 ````jsx
 http://localhost:2100/api/lista/reserva/vuelo/admin
 ````
-
-Listar reservas de vuelo desde el perfil de usuario (GET)
-````jsx
-http://localhost:2100/api/lista/mis/reserva/vuelo/usuario
-````
-Eliminar reserva de vuelo por id desde el perfil de usuario (DELETE)
-````jsx
-http://localhost:2100/api/reserva/vuelo/
-````
 Eliminar reserva de vuelo por id (DELETE)
 ````jsx
 http://localhost:2100/api/reserva/vuelo/
@@ -111,20 +102,30 @@ Listar reservas de alojamientos (GET)
 ````jsx
 http://localhost:2100/api//reserva/admin
 ````
-Listar reserva de alojamientos desde perfil de usuario (GET)
-````jsx
-http://localhost:2100/api/mis/reserva/usuario
-````
 Actualizar reserva de alojamiento por id (PUT)
 ```jsx
 http://localhost:2100/api/actualizar/reserva/
 ```
-Eliminar reserva de alojamiento por id desde perfil de usuario (DELETE)
-````jsx
-http://localhost:2100/api/mireserva/vuelo/
-````
 Eliminar reserva de alojamiento por id (DELETE)
 ````jsx
-http://localhost:2100/api/mireserva/vuelo/
+http://localhost:2100/api/eliminar/reserva/
+````
+
+Listar reserva de alojamientos desde perfil de usuario (GET)
+````jsx
+http://localhost:2100/api/mis/reserva/usuario
+````
+Eliminar reserva de alojamiento por id desde perfil de usuario (DELETE)
+````jsx
+http://localhost:2100/api/reserva/alojamiento/perfil/
+````
+Reserva de vuelos
+Listar reservas de vuelo desde el perfil de usuario (GET)
+````jsx
+http://localhost:2100/api/lista/mis/reserva/vuelo/usuario
+````
+Eliminar reserva de vuelo por id desde el perfil de usuario (DELETE)
+````jsx
+http://localhost:2100/api/rereserva/vuelo/perfil/
 ````
 <li> <a href="/README.md">Regresar</a> </li>

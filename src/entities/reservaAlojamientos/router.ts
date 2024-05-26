@@ -12,5 +12,6 @@ router.get('/reserva/admin', auth, isSuperAdmin, reservaAlojamiento.listarReserv
 router.get('/mis/reserva/usuario', auth, reservaAlojamiento.misReservarAlojamiento);
 router.put('/actualizar/reserva/:id', auth, reservaAlojamiento.editarReservaAlojamiento);
 router.delete('/eliminar/reserva/:id', auth, reservaAlojamiento.eliminarReservaAlojamiento);
+router.delete('/reserva/alojamiento/perfil/:id', auth, reservaAlojamiento.eliminaMiReservaAlojamiento);
 
 export default router;

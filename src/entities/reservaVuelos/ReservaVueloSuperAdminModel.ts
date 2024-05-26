@@ -7,13 +7,14 @@ interface ReservaVueloSuperAdmin extends Document {
     emailUsuario: string;
     idVuelo: Schema.Types.ObjectId;
     nameVuelo: string;
-    aerolineaVuelo:string;
+    aerolineaVuelo: string;
     origenVuelo: string;
     destinoVuelo: string;
     fechaVuelo: string;
     horaVuelo: string;
     cantidadAsiento: number;
     precioPagar: number;
+    reservaVueloId: Schema.Types.ObjectId;
 }
 
 const ReservaVueloSuperAdminModelSchema = new Schema<ReservaVueloSuperAdmin>(
@@ -22,12 +23,12 @@ const ReservaVueloSuperAdminModelSchema = new Schema<ReservaVueloSuperAdmin>(
         nameApellido: String,
         emailUsuario: String,
         nameVuelo: String,
-        aerolineaVuelo:String,
+        aerolineaVuelo: String,
         origenVuelo: String,
         destinoVuelo: String,
         fechaVuelo: String,
-        horaVuelo: String, 
-        
+        horaVuelo: String,
+
         idUsuario:
         {
             type: Schema.Types.ObjectId,
@@ -43,12 +44,17 @@ const ReservaVueloSuperAdminModelSchema = new Schema<ReservaVueloSuperAdmin>(
         cantidadAsiento: {
             type: Number,
             required: true,
-        }, 
-        
+        },
+
         precioPagar: {
             type: Number,
             required: true,
         },
+
+        reservaVueloId: {
+            type: Schema.Types.ObjectId,
+            ref: "ReservaVuelosUsuarios"
+        }
 
     },
     {

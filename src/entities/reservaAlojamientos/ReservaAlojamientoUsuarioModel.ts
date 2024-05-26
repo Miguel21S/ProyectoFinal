@@ -12,6 +12,7 @@ interface ReservaAlojamientoUsuario extends Document {
     horaEntrada: string;
     fechaSalida: string;
     horaSalida: string;
+    superAdminReservaId: Schema.Types.ObjectId;
 }
 
 const ReservaAlojamientoUsuariosSchama = new Schema<ReservaAlojamientoUsuario>(
@@ -34,6 +35,11 @@ const ReservaAlojamientoUsuariosSchama = new Schema<ReservaAlojamientoUsuario>(
         idUsuario: {
             type: Schema.Types.ObjectId,
             ref: "UsuarioModel"
+        },
+
+        superAdminReservaId: {
+            type: Schema.Types.ObjectId,
+            ref: "ReservaAlojamientoSuperAdmin"
         }
     },
     {
