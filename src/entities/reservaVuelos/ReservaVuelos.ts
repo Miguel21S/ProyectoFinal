@@ -341,7 +341,6 @@ const eliminarMiReservaVuelo = async (req: Request, res: Response) => {
         const usuarioId = req.tokenData.usuarioId;
         const idReservaVuelo = req.params.id;
 
-        console.log("qqqqqqq")
         const usuario = await UsuarioModel.findOne({ _id: usuarioId });
         if (!usuario) {
             return res.status(404).json({
