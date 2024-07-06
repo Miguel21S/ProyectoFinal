@@ -1,14 +1,14 @@
 
 import { Request, Response } from "express";
-import UsuarioModel from "./UsuariosModel";
+import UsersModel from "./UsersModel";
 
 //////////////////////   MÉTODO QUE LISTA TODOS USUARIOS   /////////////////////////
-const listarTodosUsuarios = async (req: Request, res: Response) => {
+const listAllUsers = async (req: Request, res: Response) => {
     try {
 
-        const usuarios = await UsuarioModel.find()
+        const users = await UsersModel.find()
             .select("name")
-            .select("apellido")
+            .select("lastName")
             .select("email")
             .select("role")
 
@@ -16,7 +16,7 @@ const listarTodosUsuarios = async (req: Request, res: Response) => {
             {
                 success: true,
                 message: "Listado",
-                data: usuarios
+                data: users
             }
         )
 
@@ -29,45 +29,45 @@ const listarTodosUsuarios = async (req: Request, res: Response) => {
 }
 
 //////////////////////   MÉTODO ACTUALIZAR USUARIO POR ID  /////////////////////////
-const actualizarUsuario = async (req: Request, res: Response) => {
+const updateUsers = async (req: Request, res: Response) => {
     try {
-        const usuarioAdmin = req.tokenData.usuarioId;
-        const idUsuario = req.params.id;
+        const userAdmin = req.tokenData.userId;
+        const idUser = req.params.id;
         const name = req.body.name
-        const apellido = req.body.apellido
+        const lastName = req.body.lastName
         const password = req.body.password
         const role = req.body.role
 
-        const adminUsuario = await UsuarioModel.findOne({ _id: usuarioAdmin });
-        if (!adminUsuario) {
+        const adminUser = await UsersModel.findOne({ _id: userAdmin });
+        if (!adminUser) {
             return res.status(404).json({
                 success: false,
                 message: "Usuario autorizado no encontrado"
             })
         }
 
-        const usuarioEditar = await UsuarioModel.findById({ _id: idUsuario });
-        if (!usuarioEditar) {
+        const userEdit = await UsersModel.findById({ _id: idUser });
+        if (!userEdit) {
             return res.status(404).json({
                 success: false,
                 message: "Usuario no encontrado"
             })
         }
 
-        if (!(adminUsuario.role === "superAdmin" || adminUsuario._id.equals(idUsuario)))
+        if (!(adminUser.role === "superAdmin" || adminUser._id.equals(idUser)))
             return res.status(403).json({
                 success: false,
                 message: "No se puede editar usuario"
             })
 
-        adminUsuario.role === "superAdmin" ?
-            await UsuarioModel.findByIdAndUpdate(
+        adminUser.role === "superAdmin" ?
+            await UsersModel.findByIdAndUpdate(
                 {
-                    _id: idUsuario
+                    _id: idUser
                 },
                 {
                     name: name,
-                    apellido: apellido,
+                    lastName: lastName,
                     password: password,
                     role: role
                 },
@@ -76,13 +76,13 @@ const actualizarUsuario = async (req: Request, res: Response) => {
                 }
             )
             :
-            await UsuarioModel.findByIdAndUpdate(
+            await UsersModel.findByIdAndUpdate(
                 {
-                    _id: idUsuario
+                    _id: idUser
                 },
                 {
                     name: name,
-                    apellido: apellido,
+                    lastName: lastName,
                     password: password,
                 },
                 {
@@ -104,35 +104,35 @@ const actualizarUsuario = async (req: Request, res: Response) => {
 }
 
 //////////////////////   MÉTODO ELIMINAR USUARIO POR ID   /////////////////////////
-const eliminarUsuarioId = async (req: Request, res: Response) => {
+const deleteUsersById = async (req: Request, res: Response) => {
     try {
-        const usuarioAdmin = req.tokenData.usuarioId;
-        const IdUsuario = req.params.id;
+        const userAdmin = req.tokenData.userId;
+        const IdUser = req.params.id;
 
-        const adminUsuario = await UsuarioModel.findOne({ _id: usuarioAdmin });
-        if (!adminUsuario) {
+        const adminUser = await UsersModel.findOne({ _id: userAdmin });
+        if (!adminUser) {
             return res.status(404).json({
                 success: false,
                 message: "Usuario autorizado no encontrado"
             })
         }
 
-        const encontrarUsuarioEliminar = await UsuarioModel.findById({ _id: IdUsuario });
-        if (!encontrarUsuarioEliminar) {
+        const findUserDelete = await UsersModel.findById({ _id: IdUser });
+        if (!findUserDelete) {
             return res.status(404).json({
                 success: false,
                 message: "Usuario no encontrado"
             })
         }
 
-        if (encontrarUsuarioEliminar.role === "superAdmin") {
+        if (findUserDelete.role === "superAdmin") {
             return res.status(404).json({
                 success: false,
                 messages: "No se puede eliminar este usuario"
             })
         }
 
-        await UsuarioModel.findByIdAndDelete(IdUsuario);
+        await UsersModel.findByIdAndDelete(IdUser);
 
         res.status(200).json({
             success: true,
@@ -147,20 +147,20 @@ const eliminarUsuarioId = async (req: Request, res: Response) => {
 }
 
 //////////////////////   MÉTODO MI PERFIL   /////////////////////////
-const miPerfil = async (req: Request, res: Response) => {
+const myProfile = async (req: Request, res: Response) => {
     try {
-        const usuarioId = req.tokenData.usuarioId;
-        const usuario = await UsuarioModel.findOne({ _id: usuarioId });
-        if (!usuario) {
+        const userId = req.tokenData.userId;
+        const user = await UsersModel.findOne({ _id: userId });
+        if (!user) {
             return res.status(404).json({
                 success: false,
                 message: "Usuario no encontrado"
             })
         }
 
-        const perfil = await UsuarioModel.find({ _id: usuario?._id })
+        const profile = await UsersModel.find({ _id: user?._id })
             .select("name")
-            .select("apellido")
+            .select("lastName")
             .select("email")
 
 
@@ -168,7 +168,7 @@ const miPerfil = async (req: Request, res: Response) => {
             {
                 success: true,
                 message: "Perfil encontrado con suceso",
-                data: perfil
+                data: profile
             }
         )
 
@@ -181,6 +181,6 @@ const miPerfil = async (req: Request, res: Response) => {
 }
 
 export {
-    listarTodosUsuarios, actualizarUsuario,
-    eliminarUsuarioId, miPerfil
+    listAllUsers, updateUsers,
+    deleteUsersById, myProfile
 }

@@ -1,22 +1,22 @@
 
 import { Document, model, Schema } from "mongoose";
 
-interface Usuario extends Document {
+interface User extends Document {
     name: string;
-    apellido: string;
+    lastName: string;
     email: string;
     password: string;
     role: string;
 }
 
-const UsuarioSchema = new Schema<Usuario>(
+const UserSchema = new Schema<User>(
     {
         name: {
             type: String,
             required: true,
         },
 
-        apellido: {
+        lastName: {
             type: String,
             required: true,
         },
@@ -44,5 +44,5 @@ const UsuarioSchema = new Schema<Usuario>(
     }
 )
 
-const UsuarioModel = model<Usuario>("Usuario", UsuarioSchema);
-export default UsuarioModel;
+const UsersModel = model<User>("User", UserSchema);
+export default UsersModel;

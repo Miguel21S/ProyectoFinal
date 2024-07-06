@@ -1,30 +1,31 @@
 
 import { Document, model, Schema } from "mongoose";
+import { types } from "util";
 
 
-interface Alojamiento extends Document {
+interface Accommodation extends Document {
     name: string;
-    ciudad: string;
-    tipo: string;
-    precio: number;
+    city: string;
+    kinds: string;
+    price: number;
 }
 
-const AlojamientoSchema = new Schema<Alojamiento>(
+const AccommodationsSchema = new Schema<Accommodation>(
     {
         name: {
             type: String,
             required: true,
         },
 
-        ciudad: {
+        city: {
             type: String,
             required: true,
         },
-        tipo: {
+        kinds: {
             type: String,
             required: true,
         },
-        precio: {
+        price: {
             type: Number,
             required: true,
         },
@@ -34,5 +35,5 @@ const AlojamientoSchema = new Schema<Alojamiento>(
         versionKey: false,
     }
 )
-const AlojamientoModel = model<Alojamiento>("Alojamiento", AlojamientoSchema);
-export default AlojamientoModel;
+const AccommodationsModel = model<Accommodation>("Accommodation", AccommodationsSchema);
+export default AccommodationsModel;

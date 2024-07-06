@@ -1,13 +1,13 @@
 import { NextFunction, Response } from "express";
 import { CustomRequest } from "./auth";
-import UsuarioModel from "../../entities/usuarios/UsuariosModel";
+import UsersModel from "../../entities/users/UsersModel";
 
 export const isSuperAdmin = async(req: CustomRequest, res: Response, next: NextFunction) => {
     try {
-        let usuarioRole;
-        const usuario = await UsuarioModel.findById( { _id: req.tokenData.usuarioId} );
+        let userRole;
+        const user = await UsersModel.findById( { _id: req.tokenData.userId} );
 
-        if(!usuario){
+        if(!user){
             return res.status(404).json(
                 {
                     success: false,
@@ -16,8 +16,8 @@ export const isSuperAdmin = async(req: CustomRequest, res: Response, next: NextF
             )
         }
 
-        usuarioRole = usuario.role;
-        if(usuarioRole !== "superAdmin"){
+        userRole = user.role;
+        if(userRole !== "superAdmin"){
             return res.status(404).json(
                 {
                     success: false,

@@ -1,8 +1,8 @@
 import { Number } from "mongoose";
 
 export type TokenData = {
-    usuarioId: Number,
-    UsuarioRole: string
+    userId: Number,
+    UserRole: string
 }
 
 declare global {

@@ -1,35 +1,35 @@
 
 import { Request, Response } from "express";
-import UsuarioModel from "../usuarios/UsuariosModel";
-import AlojamientoModel from "./AlojamientosModel";
+import UsersModel from "../users/UsersModel";
+import AccommodationsModel from "./AccommodationsModel";
 
 //////////////////////   MÉTODO CREAR ALOJAMIENTO  /////////////////////////
-const crearAlojamiento = async (req: Request, res: Response) => {
+const createAccommodation = async (req: Request, res: Response) => {
     try {
-        const usuarioAdmin = req.tokenData.usuarioId;
-        const precio = req.body.precio;
-        const { name, ciudad, tipo } = req.body
+        const userAdmin = req.tokenData.userId;
+        const price = req.body.price;
+        const { name, city, kinds } = req.body
 
-        const usuario = await UsuarioModel.findOne({ _id: usuarioAdmin });
-        if (!usuario) {
+        const user = await UsersModel.findOne({ _id: userAdmin });
+        if (!user) {
             return res.status(404).json({
                 success: false,
                 message: "Usuario autorizado no encontrado"
             })
         }
 
-        if (usuario.role !== "superAdmin") {
+        if (user.role !== "superAdmin") {
             return res.status(404).json({
                 success: false,
                 messages: "Usuario no autorizado"
             })
         }
 
-        await AlojamientoModel.create({
+        await AccommodationsModel.create({
             name: name,
-            ciudad: ciudad,
-            tipo: tipo,
-            precio: precio
+            city: city,
+            kinds: kinds,
+            price: price
         })
 
         res.status(200).json(
@@ -49,19 +49,19 @@ const crearAlojamiento = async (req: Request, res: Response) => {
 }
 
 //////////////////////   MÉTODO LISTA ALOJAMIENTO  /////////////////////////
-const listarAlojamiento = async (req: Request, res: Response) => {
+const listAccommodation = async (req: Request, res: Response) => {
     try {
-        const alojamientos = await AlojamientoModel.find()
+        const accommodation = await AccommodationsModel.find()
             .select("name")
-            .select("ciudad")
-            .select("tipo")
-            .select("precio")
+            .select("city")
+            .select("kinds")
+            .select("price")
 
         res.status(200).json(
             {
                 success: true,
                 message: "Lista de alojamientos",
-                data: alojamientos
+                data: accommodation
             }
         )
     } catch (error) {
@@ -75,44 +75,44 @@ const listarAlojamiento = async (req: Request, res: Response) => {
 }
 
 //////////////////////   MÉTODO EDITAR ALOJAMIENTO  /////////////////////////
-const actualizarAlojamiento = async (req: Request, res: Response) => {
+const updateAccommodation = async (req: Request, res: Response) => {
     try {
-        const usuarioAdmin = req.tokenData.usuarioId;
-        const alojamientoId = req.params.id;
-        const { name, ciudad, tipo, precio} = req.body;
+        const userAdmin = req.tokenData.userId;
+        const accommodationId = req.params.id;
+        const { name, city, kinds, price} = req.body;
 
-        const usuario = await UsuarioModel.findOne({ _id: usuarioAdmin });
-        if (!usuario) {
+        const user = await UsersModel.findOne({ _id: userAdmin });
+        if (!user) {
             return res.status(404).json({
                 success: false,
                 message: "Usuario autorizado no encontrado"
             })
         }
 
-        if (usuario.role !== "superAdmin") {
+        if (user.role !== "superAdmin") {
             return res.status(404).json({
                 success: false,
                 messages: "Usuario no autorizado"
             })
         }
 
-        const alojamientos = await AlojamientoModel.findOne({ _id: alojamientoId });
-        if (!alojamientos) {
+        const accommodation = await AccommodationsModel.findOne({ _id: accommodationId });
+        if (!accommodation) {
             return res.status(404).json({
                 success: false,
                 message: "No se pudo encontrar alojamiento"
             })
         }
 
-        await AlojamientoModel.findByIdAndUpdate(
+        await AccommodationsModel.findByIdAndUpdate(
             {
-                _id: alojamientoId
+                _id: accommodationId
             },
             {
                 name: name,
-                ciudad: ciudad,
-                tipo: tipo,
-                precio: precio
+                city: city,
+                kinds: kinds,
+                price: price
             }
         );
         res.status(200).json(
@@ -132,35 +132,35 @@ const actualizarAlojamiento = async (req: Request, res: Response) => {
 }
 
 //////////////////////   MÉTODO ELIMINAR ALOJAMIENTO  /////////////////////////
-const eliminarAlojamiento = async (req: Request, res: Response) => {
+const deleteAccommodation = async (req: Request, res: Response) => {
     try {
-        const usuarioAdmin = req.tokenData.usuarioId;
-        const alojamientoId = req.params.id;
+        const userAdmin = req.tokenData.userId;
+        const accommodationId = req.params.id;
 
-        const usuario = await UsuarioModel.findOne({ _id: usuarioAdmin });
-        if (!usuario) {
+        const user = await UsersModel.findOne({ _id: userAdmin });
+        if (!user) {
             return res.status(404).json({
                 success: false,
                 message: "Usuario autorizado no encontrado"
             })
         }
 
-        if (usuario.role !== "superAdmin") {
+        if (user.role !== "superAdmin") {
             return res.status(404).json({
                 success: false,
                 messages: "Usuario no autorizado"
             })
         }
 
-        const alojamientos = await AlojamientoModel.findOne({ _id: alojamientoId });
-        if (!alojamientos) {
+        const accommodation = await AccommodationsModel.findOne({ _id: accommodationId });
+        if (!accommodation) {
             return res.status(404).json({
                 success: false,
                 message: "No se pudo encontrar alojamiento"
             })
         }
 
-        await AlojamientoModel.findByIdAndDelete(alojamientoId);
+        await AccommodationsModel.findByIdAndDelete(updateAccommodation);
         res.status(200).json(
             {
                 success: true,
@@ -177,6 +177,6 @@ const eliminarAlojamiento = async (req: Request, res: Response) => {
     }
 }
 export {
-    crearAlojamiento, listarAlojamiento,
-    eliminarAlojamiento, actualizarAlojamiento
+    createAccommodation, listAccommodation,
+    deleteAccommodation, updateAccommodation
 }

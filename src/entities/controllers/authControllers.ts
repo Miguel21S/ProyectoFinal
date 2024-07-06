@@ -1,12 +1,12 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import UsuarioModel from "../usuarios/UsuariosModel";
+import UsersModel from "../users/UsersModel";
 
-const registrar = async (req: Request, res: Response) => {
+const register = async (req: Request, res: Response) => {
     try {
         const name = req.body.name;
-        const apellido = req.body.apellido;
+        const lastName = req.body.lastName;
         const email = req.body.email;
         const password = req.body.password;
 
@@ -39,10 +39,10 @@ const registrar = async (req: Request, res: Response) => {
 
         // ENCRIPTACIÓN DEL PASSWORD
         const pwdEncryptado = bcrypt.hashSync(password, 8);
-        const crearNuevoUser = await UsuarioModel.create(
+        const createNewUser = await UsersModel.create(
             {
                 name: name,
-                apellido: apellido,
+                lastName: lastName,
                 email: email,
                 password: pwdEncryptado
             }
@@ -52,7 +52,7 @@ const registrar = async (req: Request, res: Response) => {
             {
                 success: true,
                 message: "Usuario creado con suceso",
-                data: crearNuevoUser
+                data: createNewUser
             }
         )
     } catch (error) {
@@ -64,21 +64,21 @@ const registrar = async (req: Request, res: Response) => {
     }
 }
 
-const loguear = async (req: Request, res: Response) => {
+const login = async (req: Request, res: Response) => {
     try {
         const email = req.body.email;
         const password = req.body.password;
 
-        const usuario = await UsuarioModel.findOne({ email: email });
-        if (!usuario) {
+        const user = await UsersModel.findOne({ email: email });
+        if (!user) {
             return res.status(404).json({
                 success: false,
                 message: "Dato incorrecto de usuario"
             })
         }
         /////////   VALIDAR PASSWORD   //////////
-        const validarpw = bcrypt.compareSync(password, usuario!.password);
-        if (!validarpw) {
+        const validaterpw = bcrypt.compareSync(password, user!.password);
+        if (!validaterpw) {
             return res.status(404).json({
                 success: false,
                 message: "Dato incorrecto password"
@@ -88,10 +88,10 @@ const loguear = async (req: Request, res: Response) => {
         ///////////////   CREACIÓN DEL TOKEN   ////////////////////
         const token = jwt.sign(
             {
-                name: usuario.name,
+                name: user.name,
                 email: email.email,
-                usuarioId: usuario._id,
-                usuarioRole: usuario.role
+                userId: user._id,
+                userRole: user.role
             },
             process.env.JWT_SECRET as string,
             {
@@ -113,5 +113,5 @@ const loguear = async (req: Request, res: Response) => {
 }
 
 export{
-    registrar, loguear
+    register, login
 }

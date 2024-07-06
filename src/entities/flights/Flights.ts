@@ -1,28 +1,28 @@
 
 import { Request, Response } from "express";
-import VueloModel from "./VuelosModel";
-import UsuarioModel from "../usuarios/UsuariosModel";
+import FlightsModel from "./FlightsModel";
+import UsersModel from "../users/UsersModel";
 
 //////////////////////   MÉTODO ADICIONAR VUELO   /////////////////////////
-const adicionarVuelo = async (req: Request, res: Response) => {
+const addFlights = async (req: Request, res: Response) => {
     try {
         const {
-                name, aerolinea,capacidadAsiento, origen, destino,
-                precio, fechaIda, horaIda, fechaRegreso, horaRegreso
+                name, airline,seatcapacity, origin, destination,
+                price, dateDeparture, timeGoTime, dateReturn, timeReturn
             } = req.body;
        
 
-        const vueloAdicionado = await VueloModel.create({
+        const flightAdd = await FlightsModel.create({
             name: name,
-            aerolinea: aerolinea,
-            capacidadAsiento: capacidadAsiento,
-            origen: origen,
-            destino: destino,
-            precio: precio,
-            fechaIda: fechaIda,
-            horaIda: horaIda,
-            fechaRegreso: fechaRegreso,
-            horaRegreso: horaRegreso,
+            airline: airline,
+            seatcapacity: seatcapacity,
+            origin: origin,
+            destination: destination,
+            price: price,
+            dateDeparture: dateDeparture,
+            timeGoTime: timeGoTime,
+            dateReturn: dateReturn,
+            timeReturn: timeReturn,
         })
 
         res.status(200).json(
@@ -42,25 +42,25 @@ const adicionarVuelo = async (req: Request, res: Response) => {
 }
 
 //////////////////////   MÉTODO LISTAR VUELOS  /////////////////////////
-const listarVuelos = async (req: Request, res: Response) => {
+const listFlights = async (req: Request, res: Response) => {
     try {
-        const vuelos = await VueloModel.find()
+        const flights = await FlightsModel.find()
         .select("name")
-        .select("aerolinea")
-        .select("capacidadAsiento")
-        .select("origen")
-        .select("destino")
-        .select("fechaIda")
-        .select("horaIda")
-        .select("fechaRegreso")
-        .select("horaRegreso")
-        .select("precio")
+        .select("airline")
+        .select("seatcapacity")
+        .select("origin")
+        .select("destination")
+        .select("dateDeparture")
+        .select("timeGoTime")
+        .select("dateReturn")
+        .select("timeReturn")
+        .select("price")
 
         res.status(200).json(
             {
                 success: true,
                 message: "Lista de vuelos",
-                data: vuelos
+                data: flights
             }
         )
     } catch (error) {
@@ -74,54 +74,54 @@ const listarVuelos = async (req: Request, res: Response) => {
 }
 
 //////////////////////   MÉTODO ACTUALIZAR VUELO   /////////////////////////
-const actualizarVuelo = async (req: Request, res: Response) =>{
+const updateFlights = async (req: Request, res: Response) =>{
     try {
-        const usuarioAdmin = req.tokenData.usuarioId;
-        const idVuelo = req.params.id;
+        const userAdmin = req.tokenData.userId;
+        const idFlight = req.params.id;
         const { 
-                name, aerolinea, capacidadAsiento, origen, destino,
-                precio, fechaIda, horaIda, fechaRegreso, horaRegreso
-            } = req.body;
+            name, airline,seatcapacity, origin, destination,
+            price, dateDeparture, timeGoTime, dateReturn, timeReturn
+        } = req.body;
           
 
-        const usuario = await UsuarioModel.findOne({_id: usuarioAdmin});
-        if(!usuario){
+        const user = await UsersModel.findOne({_id: userAdmin});
+        if(!user){
             return res.status(404).json({
                 success: false,
                 message: "Usuario autorizado no encontrado"
             })
         }
 
-        if(usuario.role !== "superAdmin"){
+        if(user.role !== "superAdmin"){
             return res.status(404).json({
                 success: false,
                 message: "Usuario autorizado no encontrado",
             }) 
         }
 
-        const vuelo = await VueloModel.findById({ _id: idVuelo});
-        if(!vuelo){
+        const flight = await FlightsModel.findById({ _id: idFlight});
+        if(!flight){
             return res.status(404).json({
                 success: false,
                 message: "Vuelo no encontrado",
             }) 
         }
         
-        await VueloModel.findByIdAndUpdate(
+        await FlightsModel.findByIdAndUpdate(
             {
-                _id:idVuelo
+                _id:idFlight
             },
-            {
+            {                
                 name: name,
-                capacidadAsiento: capacidadAsiento,
-                aerolinea: aerolinea,
-                origen: origen,
-                destino: destino,
-                precio: precio,
-                fechaIda: fechaIda,
-                horaIda: horaIda,
-                fechaRegreso: fechaRegreso,
-                horaRegreso: horaRegreso, 
+                seatcapacity: seatcapacity,
+                airline: airline,
+                origin: origin,
+                destination: destination,
+                price: price,
+                dateDeparture: dateDeparture,
+                timeGoTime: timeGoTime,
+                dateReturn: dateReturn,
+                timeReturn: timeReturn,
             },
             {
                 new: true
@@ -145,35 +145,35 @@ const actualizarVuelo = async (req: Request, res: Response) =>{
 }
 
 //////////////////////   MÉTODO ELIMINAR VUELO POR ID   /////////////////////////
-const eliminarVuelo = async (req: Request, res: Response) =>{
+const deleteFlights = async (req: Request, res: Response) =>{
     try {
-        const usuarioAdmin = req.tokenData.usuarioId;
-        const vueloId = req.params.id;
+        const userAdmin = req.tokenData.userId;
+        const idFlight = req.params.id;
 
-        const usuario = await UsuarioModel.findOne({_id: usuarioAdmin});
-        if(!usuario){
+        const user = await UsersModel.findOne({_id: userAdmin});
+        if(!user){
             return res.status(404).json({
                 success: false,
                 message: "Usuario autorizado no encontrado"
             })
         }
         
-        if(usuario.role  !== "superAdmin"){
+        if(user.role  !== "superAdmin"){
             return res.status(404).json({
                 success: false,
                 messages: "Usuario no autorizado"
             })
         }
 
-        const vuelo = await VueloModel.findById({ _id: vueloId });
-        if(!vuelo){
+        const flight = await FlightsModel.findById({ _id: idFlight });
+        if(!flight){
             return res.status(404).json({
                 success: false,
                 message: "Vuelo no encontrado"
             })
         }
         
-        await VueloModel.findByIdAndDelete( vueloId );
+        await FlightsModel.findByIdAndDelete( idFlight );
 
         res.status(200).json({
             success: true,
@@ -188,6 +188,6 @@ const eliminarVuelo = async (req: Request, res: Response) =>{
 }
 
 export {
-    adicionarVuelo, listarVuelos, actualizarVuelo,
-    eliminarVuelo
+    addFlights, listFlights, updateFlights,
+    deleteFlights
 }

@@ -1,66 +1,66 @@
 
 import { Schema, model, Document } from "mongoose";
 
-interface Vuelo extends Document {
+interface Flight extends Document {
     name: string;
-    aerolinea: string;
-    capacidadAsiento: number;
-    origen: string;
-    destino: string;
-    precio: number;
-    fechaIda: string;
-    horaIda: string;
-    fechaRegreso: string;
-    horaRegreso: string;
-    fechaRegistro: Date;
+    airline: string;
+    seatcapacity: number;
+    origin: string;
+    destination: string;
+    price: number;
+    dateDeparture: string;
+    timeGoTime: string;
+    dateReturn: string;
+    timeReturn: string;
+    dateRecord: Date;
 
     // following?: Schema.Types.ObjectId;
     // followers?: Schema.Types.ObjectId[];
 }
 
-const VueloSchema = new Schema<Vuelo>(
+const FlightSchema = new Schema<Flight>(
     {
         name: {
             type: String,
             required: false,
         },
-        aerolinea: {
+        airline: {
             type: String,
             required: false,
         },
-        capacidadAsiento: {
+        seatcapacity: {
             type: Number,
             required: true,
         },
-        origen: {
+        origin: {
             type: String,
             required: false,
         },
-        destino: {
+        destination: {
             type: String,
             required: false,
         },
-        precio: {
+        price: {
             type: Number,
             required: true,
         },
-        fechaIda: {
+        dateDeparture: {
             type: String,
             required: false,
         },
-        horaIda: {
+        timeGoTime: {
             type: String,
             required: false,
         },
-        fechaRegreso: {
+        dateReturn: {
             type: String,
             required: false,
         },
-        horaRegreso: {
+        timeReturn: {
             type: String,
             required: false,
         },
-        fechaRegistro: {
+        dateRecord: {
             type: Date,
             default: Date.now
         },
@@ -68,5 +68,5 @@ const VueloSchema = new Schema<Vuelo>(
     
 )
 
-const VueloModel = model<Vuelo>("Vuelo", VueloSchema);
-export default VueloModel;
+const FlightModel = model<Flight>("Flight", FlightSchema);
+export default FlightModel;

@@ -2,9 +2,9 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import { faker } from '@faker-js/faker';
-import AlojamientoModel from '../../../entities/alojamientos/AlojamientosModel';
-import UsuarioModel from '../../../entities/usuarios/UsuariosModel';
-import VueloModel from '../../../entities/vuelos/VuelosModel';
+import AccommodationsModel from '../../../entities/accommodation/AccommodationsModel';
+import UsersModel from '../../../entities/users/UsersModel';
+import FlightsModel from '../../../entities/flights/FlightsModel';
 import 'dotenv/config';
 import { dbConnection } from "../db"
 
@@ -15,14 +15,14 @@ dbConnection();
 const createSeedData = async () => {
     try {
         // Eliminar datos existentes
-        await UsuarioModel.deleteMany({});
-        await AlojamientoModel.deleteMany({});
-        await VueloModel.deleteMany({});
+        await UsersModel.deleteMany({});
+        await AccommodationsModel.deleteMany({});
+        await FlightsModel.deleteMany({});
 
         // Crear un superAdmin
-        const superAdmin = new UsuarioModel({
+        const superAdmin = new UsersModel({
             name: 'Miguel',
-            apellido: 'SuperAdmin',
+            lastName: 'SuperAdmin',
             email: 'miguel@gmail.com',
             password: bcrypt.hashSync('Miguel.1234', 8),
             role: 'superAdmin',
@@ -32,9 +32,9 @@ const createSeedData = async () => {
         // Crear 10 usuarios normales
         const users = [];
         for (let i = 0; i < 10; i++) {
-            const user = new UsuarioModel({
+            const user = new UsersModel({
                 name: faker.name.firstName(),
-                apellido: faker.name.lastName(),
+                lastName: faker.name.lastName(),
                 email: faker.internet.email().toLowerCase(),
                 password: bcrypt.hashSync('User1234.', 8),
                 role: 'user',
@@ -44,36 +44,36 @@ const createSeedData = async () => {
         }
 
         // Crear 7 alojamientos
-        const alojamientos = [];
+        const accommodations = [];
         for (let i = 0; i < 7; i++) {
-            const alojamiento = new AlojamientoModel({
+            const accommodation = new AccommodationsModel({
                 name: faker.company.name(),
-                ciudad: faker.address.city(),
-                tipo: faker.lorem.word(),
-                precio: faker.datatype.number({ min: 50, max: 500 }),
+                city: faker.address.city(),
+                kinds: faker.lorem.word(),
+                price: faker.datatype.number({ min: 50, max: 500 }),
             });
-            await alojamiento.save();
-            alojamientos.push(alojamiento);
+            await accommodation.save();
+            accommodations.push(accommodation);
         }
 
         // Crear 4 vuelos
-        const vuelos = [];
+        const flights = [];
         for (let i = 0; i < 4; i++) {
-            const vuelo = new VueloModel({
+            const flight = new FlightsModel({
                 name: `Vuelo ${i + 1}`,
-                aerolinea: faker.company.name(),
-                capacidadAsiento: faker.datatype.number({ min: 100, max: 300 }),
-                origen: faker.address.city(),
-                destino: faker.address.city(),
-                precio: faker.datatype.number({ min: 200, max: 2000 }),
-                fechaIda: faker.date.future().toISOString().split('T')[0],
-                horaIda: `${faker.datatype.number({ min: 0, max: 23 })}:${faker.datatype.number({ min: 0, max: 59 })}`,
-                fechaRegreso: faker.date.future().toISOString().split('T')[0],
-                horaRegreso: `${faker.datatype.number({ min: 0, max: 23 })}:${faker.datatype.number({ min: 0, max: 59 })}`,
-                fechaRegistro: new Date(),
+                airline: faker.company.name(),
+                seatcapacity: faker.datatype.number({ min: 100, max: 300 }),
+                origin: faker.address.city(),
+                destination: faker.address.city(),
+                price: faker.datatype.number({ min: 200, max: 2000 }),
+                dateDeparture: faker.date.future().toISOString().split('T')[0],
+                timeGoTime: `${faker.datatype.number({ min: 0, max: 23 })}:${faker.datatype.number({ min: 0, max: 59 })}`,
+                dateReturn: faker.date.future().toISOString().split('T')[0],
+                timeReturn: `${faker.datatype.number({ min: 0, max: 23 })}:${faker.datatype.number({ min: 0, max: 59 })}`,
+                dateRecord: new Date(),
             });
-            await vuelo.save();
-            vuelos.push(vuelo);
+            await flight.save();
+            flights.push(flight);
         }
 
         console.log('Datos insertados correctamente');
