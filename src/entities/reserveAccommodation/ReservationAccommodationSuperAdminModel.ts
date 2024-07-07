@@ -40,7 +40,7 @@ const ReservationAccommodationSuperAdminSchama = new Schema<ReservationAccommoda
 
         reservationAccommodationId: {
             type: Schema.Types.ObjectId,
-            ref: "ReservationAccommodationModel"
+            ref: "ReservationAccommodationUsersModel"
         }
     },
     {

@@ -47,5 +47,5 @@ const ReservationAccommodationUsersSchama = new Schema<ReservationAccommodationU
         versionKey: false,
     }
 )
-const ReservationAccommodationModel = model<ReservationAccommodationUser>("ReservationAccommodationModel", ReservationAccommodationUsersSchama);
-export default ReservationAccommodationModel;
+const ReservationAccommodationUsersModel = model<ReservationAccommodationUser>("ReservationAccommodationModel", ReservationAccommodationUsersSchama);
+export default ReservationAccommodationUsersModel;

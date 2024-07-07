@@ -59,7 +59,7 @@ const createReserveAccommodation = async (req: Request, res: Response) => {
                 timeExit: timeExit,
                 reservationAccommodationId: createReservationUser._id
             });
-            createReservationUser.superAdminReserveId = createReserveSuperAdmin._id;
+        createReservationUser.superAdminReserveId = createReserveSuperAdmin._id;
 
         res.status(200).json({
             success: true,
@@ -78,6 +78,7 @@ const createReserveAccommodation = async (req: Request, res: Response) => {
 const listReserveAccommodationAdmin = async (req: Request, res: Response) => {
     try {
         const idUser = req.tokenData.userId;
+
         const user = await UsersModel.findOne({ _id: idUser });
         if (!user) {
             return res.status(404).json({
@@ -279,9 +280,9 @@ const deleteMyReserveAccommodation = async (req: Request, res: Response) => {
 //////////////////////   MÉTODO LISTAR MIS RESERVA DE ALOJAMIENTO   /////////////////////////
 const mysReserveAccommodation = async (req: Request, res: Response) => {
     try {
-        const idUser = req.tokenData.userId;
+        const userId = req.tokenData.userId;
 
-        const user = await UsersModel.findOne({ _id: idUser });
+        const user = await UsersModel.findOne({ _id: userId });
         if (!user) {
             return res.status(404).json({
                 success: false,
@@ -289,7 +290,19 @@ const mysReserveAccommodation = async (req: Request, res: Response) => {
             })
         }
 
-        const rReserveAccommodation = await ReservationAccommodationUsersModel.find({ idUser: idUser })
+        const rReserveAccommodation = await ReservationAccommodationUsersModel.find({ idUser: userId })
+            /* .select("idAccommodation")
+            .select("nameAccommodation")
+            .select("cityAccommodation")
+            .select("idUser")
+            .select("nameUser")
+            .select("lastNameUser")
+            .select("emailUser")
+            .select("dateInput")
+            .select("timeInput")
+            .select("dateExit")
+            .select("timeExit") */
+
         if (!rReserveAccommodation) {
             return res.status(404).json({
                 success: false,

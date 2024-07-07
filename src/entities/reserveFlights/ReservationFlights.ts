@@ -259,7 +259,6 @@ const myReserveFlightUser = async (req: Request, res: Response) => {
             })
         }
 
-
         const rReserveFligth = await ReservationFlightsUsersModel.find({ idUser: userId })
             .select("nameUser")
             .select("lastNameUser")
@@ -268,6 +267,7 @@ const myReserveFlightUser = async (req: Request, res: Response) => {
             .select("airlineFlight")
             .select("originFlight")
             .select("destinationFlight")
+            .select("timeFlight")
             .select("dateFlight")
             .select("priceOff")
 
