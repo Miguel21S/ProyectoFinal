@@ -160,7 +160,7 @@ const deleteAccommodation = async (req: Request, res: Response) => {
             })
         }
 
-        await AccommodationsModel.findByIdAndDelete(updateAccommodation);
+        await AccommodationsModel.findByIdAndDelete(accommodation);
         res.status(200).json(
             {
                 success: true,

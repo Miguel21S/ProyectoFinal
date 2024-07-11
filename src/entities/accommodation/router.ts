@@ -9,6 +9,6 @@ const router = Router();
 router.post('/create/accommodation', auth, isSuperAdmin, accommodation.createAccommodation);
 router.get('/list/accommodation', accommodation.listAccommodation);
 router.put('/update/accommodation/:id', auth, isSuperAdmin, accommodation.updateAccommodation);
-router.delete('/delete/accommodation/:id', auth, isSuperAdmin, accommodation.deleteAccommodation);
+router.delete('/deletee/accommodation/:id', auth, isSuperAdmin, accommodation.deleteAccommodation);
 
 export default router;
