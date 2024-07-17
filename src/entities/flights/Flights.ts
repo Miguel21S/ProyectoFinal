@@ -7,7 +7,7 @@ import UsersModel from "../users/UsersModel";
 const addFlights = async (req: Request, res: Response) => {
     try {
         const {
-                name, airline,seatcapacity, origin, destination,
+                name, country, airline,seatcapacity, origin, destination,
                 price, dateDeparture, timeGoTime, dateReturn, timeReturn
             } = req.body;
        
@@ -16,6 +16,7 @@ const addFlights = async (req: Request, res: Response) => {
             name: name,
             airline: airline,
             seatcapacity: seatcapacity,
+            country: country,
             origin: origin,
             destination: destination,
             price: price,
@@ -48,6 +49,7 @@ const listFlights = async (req: Request, res: Response) => {
         .select("name")
         .select("airline")
         .select("seatcapacity")
+        .select("country")
         .select("origin")
         .select("destination")
         .select("dateDeparture")
@@ -79,7 +81,7 @@ const updateFlights = async (req: Request, res: Response) =>{
         const userAdmin = req.tokenData.userId;
         const idFlight = req.params.id;
         const { 
-            name, airline,seatcapacity, origin, destination,
+            name, airline,seatcapacity, country, origin, destination,
             price, dateDeparture, timeGoTime, dateReturn, timeReturn
         } = req.body;
           
@@ -115,6 +117,7 @@ const updateFlights = async (req: Request, res: Response) =>{
                 name: name,
                 seatcapacity: seatcapacity,
                 airline: airline,
+                country: country,
                 origin: origin,
                 destination: destination,
                 price: price,

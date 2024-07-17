@@ -63,6 +63,7 @@ const createSeedData = async () => {
                 name: `Vuelo ${i + 1}`,
                 airline: faker.company.name(),
                 seatcapacity: faker.datatype.number({ min: 100, max: 300 }),
+                country: faker.address.country(),
                 origin: faker.address.city(),
                 destination: faker.address.city(),
                 price: faker.datatype.number({ min: 200, max: 2000 }),

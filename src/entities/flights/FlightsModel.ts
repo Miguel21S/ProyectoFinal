@@ -3,6 +3,7 @@ import { Schema, model, Document } from "mongoose";
 
 interface Flight extends Document {
     name: string;
+    country: string;
     airline: string;
     seatcapacity: number;
     origin: string;
@@ -30,6 +31,10 @@ const FlightSchema = new Schema<Flight>(
         },
         seatcapacity: {
             type: Number,
+            required: true,
+        },
+        country: {
+            type: String,
             required: true,
         },
         origin: {
