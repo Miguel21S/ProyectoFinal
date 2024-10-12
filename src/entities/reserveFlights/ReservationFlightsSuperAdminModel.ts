@@ -1,4 +1,4 @@
-import { Document, model, Schema } from "mongoose";
+/* import { Document, model, Schema } from "mongoose";
 
 interface ReservationFlightsSuperAdmin extends Document {
     idUser: Schema.Types.ObjectId;
@@ -63,4 +63,6 @@ const ReservationFlightsSuperAdminModelSchema = new Schema<ReservationFlightsSup
     }
 )
 const ReservationFlightsSuperAdminModel = model<ReservationFlightsSuperAdmin>("ReservationFlightsSuperAdmin", ReservationFlightsSuperAdminModelSchema);
-export default ReservationFlightsSuperAdminModel;
+export default ReservationFlightsSuperAdminModel; */
+
+

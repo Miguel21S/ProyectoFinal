@@ -7,7 +7,7 @@ import UsersModel from "../users/UsersModel";
 const addFlights = async (req: Request, res: Response) => {
     try {
         const {
-                name, country, airline,seatcapacity, origin, destination,
+                name, airline,seatcapacity, country, origin, destination,
                 price, dateDeparture, timeGoTime, dateReturn, timeReturn
             } = req.body;
        

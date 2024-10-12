@@ -3,9 +3,9 @@ import { Schema, model, Document } from "mongoose";
 
 interface Flight extends Document {
     name: string;
-    country: string;
     airline: string;
     seatcapacity: number;
+    country: string;
     origin: string;
     destination: string;
     price: number;
